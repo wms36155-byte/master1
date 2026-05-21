@@ -3,6 +3,8 @@
 import Link from "next/link";
 import Container from "./Container";
 import Button from "../ui/Button";
+import { ShoppingCart } from "lucide-react";
+import { useCartStore } from "@/store/cart.store";
 
 const navLinks = [
   {
@@ -24,7 +26,9 @@ const navLinks = [
 ];
 
 export default function Navbar() {
+  const items = useCartStore((state) => state.items);
   return (
+    
     <header className="sticky top-0 z-50 backdrop-blur-xl border-b border-white/10 bg-black/20">
       <Container className="flex items-center justify-between h-20">
         <Link href="/">
@@ -45,7 +49,21 @@ export default function Navbar() {
           ))}
         </nav>
 
-        <Button>Login</Button>
+
+       <div className="flex items-center gap-4">
+  <Link href="/cart" className="relative">
+    <ShoppingCart className="text-white" />
+
+    {items.length > 0 && (
+      <div className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-green-500 text-xs flex items-center justify-center">
+        {items.length}
+      </div>
+    )}
+  </Link>
+
+  <Button>Login</Button>
+</div>
+
       </Container>
     </header>
   );

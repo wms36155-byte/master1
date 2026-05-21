@@ -1,17 +1,19 @@
+"use client";
 import Link from "next/link";
 import { MapPin, Star } from "lucide-react";
-
 import { Equipment } from "@/types/equipment.types";
-
 import Button from "../ui/Button";
-
+import toast from "react-hot-toast";
+import { useCartStore } from "@/store/cart.store";
 type Props = {
   equipment: Equipment;
 };
 
 export default function EquipmentCard({
+  
   equipment,
 }: Props) {
+  const addToCart = useCartStore((state) => state.addToCart);
   return (
     <div className="bg-[#102E1C] rounded-3xl overflow-hidden border border-white/10 hover:border-green-500/40 transition-all duration-300 group">
       <div className="relative overflow-hidden">
@@ -59,13 +61,27 @@ export default function EquipmentCard({
           </span>
         </div>
 
-        <div className="mt-6">
-          <Link href={`/equipment/${equipment.id}`}>
-            <Button className="w-full">
-              Batafsil
-            </Button>
-          </Link>
-        </div>
+        <div className="flex gap-3 mt-6">
+  <Link
+    href={`/equipment/${equipment.id}`}
+    className="flex-1"
+  >
+    <Button className="w-full">
+      Batafsil
+    </Button>
+  </Link>
+
+  <Button
+    className="bg-white/10 hover:bg-white/20"
+    onClick={() => {
+      addToCart(equipment);
+
+      toast.success("Savatchaga qo‘shildi");
+    }}
+  >
+    +
+  </Button>
+</div>
       </div>
     </div>
   );
