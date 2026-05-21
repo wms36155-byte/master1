@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
 import {
   Pencil,
   Trash2,
@@ -9,11 +8,9 @@ import {
 } from "lucide-react";
 
 import toast from "react-hot-toast";
-
 import CreateEquipmentModal from "./CreateEquipmentModal";
-
 import type { Equipment } from "@/types/equipment.types";
-
+import EditEquipmentModal from "./EditEquipmentModal";
 import {
   getEquipments,
   deleteEquipment,
@@ -28,6 +25,11 @@ export default function EquipmentTable() {
 
   const [open, setOpen] = useState(false);
 
+const [selectedEquipment, setSelectedEquipment] =
+  useState<Equipment | null>(null);
+
+const [editOpen, setEditOpen] =
+  useState(false);
   // FETCH
   const fetchData = async () => {
     try {
@@ -147,12 +149,21 @@ export default function EquipmentTable() {
                     <td className="p-5">
                       <div className="flex items-center gap-3">
                         {/* EDIT */}
-                        <button className="w-10 h-10 rounded-xl bg-blue-500/20 hover:bg-blue-500/30 transition-all flex items-center justify-center">
-                          <Pencil
-                            size={18}
-                            className="text-blue-400"
-                          />
-                        </button>
+                        <button
+  onClick={() => {
+    setSelectedEquipment(
+      equipment
+    );
+
+    setEditOpen(true);
+  }}
+  className="w-10 h-10 rounded-xl bg-blue-500/20 hover:bg-blue-500/30 transition-all flex items-center justify-center"
+>
+  <Pencil
+    size={18}
+    className="text-blue-400"
+  />
+</button>
 
                         {/* DELETE */}
                         <button
@@ -185,11 +196,20 @@ export default function EquipmentTable() {
       </div>
 
       {/* MODAL */}
+      <EditEquipmentModal
+  isOpen={editOpen}
+  onClose={() =>
+    setEditOpen(false)
+  }
+  equipment={selectedEquipment}
+  refetch={fetchData}
+/>
       <CreateEquipmentModal
         isOpen={open}
         onClose={() => setOpen(false)}
         refetch={fetchData}
       />
     </>
+    
   );
 }
