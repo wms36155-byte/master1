@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
+import MotionProvider from "@/components/providers/MotionProvider";
 
 export const metadata: Metadata = {
   title: "MasterLaser",
@@ -14,9 +15,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
+     <body>
   <Toaster position="top-right" />
-  {children}
+
+  <MotionProvider>
+    {children}
+  </MotionProvider>
 </body>
     </html>
   );
