@@ -1,7 +1,13 @@
+import Navbar from "@/components/shared/Navbar";
+import Hero from "@/components/home/Hero";
+import EquipmentList from "@/components/home/EquipmentList";
+
 export default function HomePage() {
   return (
-    <div>
-      MasterLaser
-    </div>
+    <main>
+      <Navbar />
+      <Hero />
+      <EquipmentList />
+    </main>
   );
 }

@@ -1,5 +1,46 @@
 {
-  "equipments": [],
+  "equipments": [
+    {
+      "id": 1,
+      "name": "CAT 320D",
+      "category": "Ekskavator",
+      "image": "https://images.unsplash.com/photo-1599707254554-027aeb4deacd?q=80&w=1200&auto=format&fit=crop",
+      "pricePerHour": 450000,
+      "pricePerDay": 5000000,
+      "pricePerMonth": 120000000,
+      "operatorAvailable": true,
+      "location": "Toshkent",
+      "rating": 4.9,
+      "description": "Professional excavator"
+    },
+    {
+      "id": 2,
+      "name": "JCB 3CX",
+      "category": "Pogruzchik",
+      "image": "https://images.unsplash.com/photo-1621886292650-520c2f58b89f?q=80&w=1200&auto=format&fit=crop",
+      "pricePerHour": 350000,
+      "pricePerDay": 4000000,
+      "pricePerMonth": 95000000,
+      "operatorAvailable": true,
+      "location": "Samarqand",
+      "rating": 4.7,
+      "description": "Powerful loader"
+    },
+    {
+      "id": 3,
+      "name": "Toyota Forklift",
+      "category": "Forklift",
+      "image": "https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?q=80&w=1200&auto=format&fit=crop",
+      "pricePerHour": 200000,
+      "pricePerDay": 2500000,
+      "pricePerMonth": 70000000,
+      "operatorAvailable": false,
+      "location": "Buxoro",
+      "rating": 4.5,
+      "description": "Warehouse forklift"
+    }
+  ],
+
   "bookings": [],
   "users": [],
   "operators": []
