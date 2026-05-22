@@ -1,20 +1,27 @@
-import { api } from "@/lib/axios";
+import  api from "@/lib/axios";
 
-import { Booking } from "@/types/booking.types";
+import {
+  Booking,
+  CreateBookingDto,
+} from "@/types/booking.types";
 
-export const createBooking = async (
-  booking: Booking
-) => {
-  const res = await api.post(
-    "/bookings",
-    booking
-  );
+export const getBookings =
+  async (): Promise<Booking[]> => {
+    const res = await api.get(
+      "/bookings"
+    );
 
-  return res.data;
-};
+    return res.data;
+  };
 
-export const getBookings = async () => {
-  const res = await api.get("/bookings");
+export const createBooking =
+  async (
+    data: CreateBookingDto
+  ) => {
+    const res = await api.post(
+      "/bookings",
+      data
+    );
 
-  return res.data;
-};
+    return res.data;
+  };

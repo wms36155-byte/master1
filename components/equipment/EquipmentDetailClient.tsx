@@ -3,10 +3,12 @@
 import { useState } from "react";
 
 import Button from "../ui/Button";
+
 import BookingModal from "./BookingModal";
 
 type Props = {
   equipmentName: string;
+
   pricePerDay: number;
 };
 
@@ -14,14 +16,15 @@ export default function EquipmentDetailClient({
   equipmentName,
   pricePerDay,
 }: Props) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] =
+    useState(false);
 
   return (
     <>
-      <div className="flex gap-4 mt-10">
+      <div className="flex flex-col md:flex-row gap-4">
         <Button
-          className="flex-1"
           onClick={() => setOpen(true)}
+          className="flex-1"
         >
           Buyurtma berish
         </Button>
@@ -33,9 +36,15 @@ export default function EquipmentDetailClient({
 
       <BookingModal
         isOpen={open}
-        onClose={() => setOpen(false)}
-        equipmentName={equipmentName}
-        pricePerDay={pricePerDay}
+        onClose={() =>
+          setOpen(false)
+        }
+        equipmentName={
+          equipmentName
+        }
+        pricePerDay={
+          pricePerDay
+        }
       />
     </>
   );

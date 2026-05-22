@@ -1,36 +1,75 @@
+"use client";
+
+import { useEffect, useState } from "react";
+
 import {
   DollarSign,
   Truck,
   ShoppingCart,
-  Users,
 } from "lucide-react";
 
-const stats = [
-  {
-    title: "Daromad",
-    value: "120M",
-    icon: DollarSign,
-  },
-  {
-    title: "Texnikalar",
-    value: "24",
-    icon: Truck,
-  },
-  {
-    title: "Buyurtmalar",
-    value: "86",
-    icon: ShoppingCart,
-  },
-  {
-    title: "Operatorlar",
-    value: "12",
-    icon: Users,
-  },
-];
+import { getEquipments } from "@/services/equipment.service";
+
+import { getBookings } from "@/services/booking.service";
+
+import { Equipment } from "@/types/equipment.types";
+
+import { Booking } from "@/types/booking.types";
 
 export default function AdminStats() {
+  const [equipments, setEquipments] =
+    useState<Equipment[]>([]);
+
+  const [bookings, setBookings] =
+    useState<Booking[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const equipmentData =
+        await getEquipments();
+
+      const bookingData =
+        await getBookings();
+
+      setEquipments(equipmentData);
+
+      setBookings(bookingData);
+    };
+
+    fetchData();
+  }, []);
+
+  const totalRevenue =
+    bookings.reduce(
+      (acc, item) =>
+        acc + item.totalPrice,
+      0
+    );
+
+  const stats = [
+    {
+      title: "Daromad",
+      value: `${(
+        totalRevenue / 1000000
+      ).toFixed(1)}M`,
+      icon: DollarSign,
+    },
+
+    {
+      title: "Texnikalar",
+      value: equipments.length,
+      icon: Truck,
+    },
+
+    {
+      title: "Buyurtmalar",
+      value: bookings.length,
+      icon: ShoppingCart,
+    },
+  ];
+
   return (
-    <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-6">
+    <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
       {stats.map((item) => {
         const Icon = item.icon;
 

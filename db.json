@@ -6,12 +6,12 @@
       "category": "Ekskavator",
       "image": "https://images.unsplash.com/photo-1599707254554-027aeb4deacd?q=80&w=1200&auto=format&fit=crop",
       "pricePerHour": 450000,
-      "pricePerDay": 50000000,
+      "pricePerDay": 5000000,
       "pricePerMonth": 120000000,
       "operatorAvailable": true,
       "location": "Toshkent, Chilonzor",
       "rating": 4.9,
-      "description": "Professional excavator"
+      "description": "Professional excavator for construction projects."
     },
     {
       "id": "2",
@@ -24,7 +24,7 @@
       "operatorAvailable": true,
       "location": "Samarqand",
       "rating": 4.7,
-      "description": "Powerful loader"
+      "description": "Powerful loader for industrial work."
     },
     {
       "id": "3",
@@ -37,11 +37,65 @@
       "operatorAvailable": false,
       "location": "Buxoro",
       "rating": 4.5,
-      "description": "Warehouse forklift"
+      "description": "Warehouse forklift for logistics."
     }
   ],
-  "bookings": [],
-  "users": [],
-  "operators": [],
+  "bookings": [
+    {
+      "id": "1",
+      "equipmentName": "CAT 320D",
+      "customerName": "Ali Valiyev",
+      "phone": "+998901112233",
+      "days": 3,
+      "totalPrice": 15000000,
+      "withOperator": true,
+      "createdAt": "2026-05-20T10:00:00.000Z"
+    },
+    {
+      "id": "2",
+      "equipmentName": "JCB 3CX",
+      "customerName": "Sardor Karimov",
+      "phone": "+998909998877",
+      "days": 2,
+      "totalPrice": 8000000,
+      "withOperator": false,
+      "createdAt": "2026-05-21T14:20:00.000Z"
+    },
+    {
+      "equipmentName": "CAT 320D",
+      "customerName": "",
+      "phone": "",
+      "days": 1,
+      "totalPrice": 5500000,
+      "withOperator": true,
+      "createdAt": "2026-05-22T05:50:22.248Z",
+      "id": "oJ0HVK9OJrw"
+    }
+  ],
+  "users": [
+    {
+      "id": "1",
+      "name": "Admin",
+      "username": "admin",
+      "password": "12345",
+      "role": "admin"
+    }
+  ],
+  "operators": [
+    {
+      "id": "1",
+      "name": "Jahongir",
+      "phone": "+998901234567",
+      "experience": "5 yil",
+      "rating": 4.8
+    },
+    {
+      "id": "2",
+      "name": "Azizbek",
+      "phone": "+998907654321",
+      "experience": "3 yil",
+      "rating": 4.6
+    }
+  ],
   "$schema": "./node_modules/json-server/schema.json"
 }

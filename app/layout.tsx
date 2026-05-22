@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
 import MotionProvider from "@/components/providers/MotionProvider";
-
+import AuthProvider from "@/components/providers/AuthProvider";
 export const metadata: Metadata = {
   title: "MasterLaser",
   description: "Heavy equipment rental platform",
@@ -18,9 +18,11 @@ export default function RootLayout({
      <body>
   <Toaster position="top-right" />
 
-  <MotionProvider>
-    {children}
-  </MotionProvider>
+  <AuthProvider>
+    <MotionProvider>
+      {children}
+    </MotionProvider>
+  </AuthProvider>
 </body>
     </html>
   );

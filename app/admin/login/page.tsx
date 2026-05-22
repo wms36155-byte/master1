@@ -19,6 +19,8 @@ export default function AdminLoginPage() {
   const login = useAdminStore(
     (state) => state.login
   );
+  const [loading, setLoading] =
+  useState(false);
 
   const [username, setUsername] =
     useState("");
@@ -26,7 +28,10 @@ export default function AdminLoginPage() {
   const [password, setPassword] =
     useState("");
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
+  setLoading(true);
+
+  setTimeout(() => {
     const success = login(
       username,
       password
@@ -43,7 +48,10 @@ export default function AdminLoginPage() {
         "Login yoki parol noto‘g‘ri"
       );
     }
-  };
+
+    setLoading(false);
+  }, 1000);
+};
 
   return (
     <main className="min-h-screen flex items-center justify-center">
@@ -78,12 +86,14 @@ export default function AdminLoginPage() {
               className="w-full bg-black/20 border border-white/10 rounded-2xl px-5 py-4 outline-none"
             />
 
-            <Button
-              className="w-full"
-              onClick={handleLogin}
-            >
-              Login
-            </Button>
+           <Button
+  className="w-full"
+  onClick={handleLogin}
+>
+  {loading
+    ? "Loading..."
+    : "Login"}
+</Button>
           </div>
         </div>
       </Container>

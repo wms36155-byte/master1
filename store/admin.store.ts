@@ -9,6 +9,8 @@ type AdminStore = {
   ) => boolean;
 
   logout: () => void;
+
+  checkAuth: () => void;
 };
 
 export const useAdminStore =
@@ -20,9 +22,20 @@ export const useAdminStore =
         username === "admin" &&
         password === "12345"
       ) {
+        // STATE
         set({
           isAdmin: true,
         });
+
+        // COOKIE
+        document.cookie =
+          "admin=true; path=/";
+
+        // LOCAL STORAGE
+        localStorage.setItem(
+          "isAdmin",
+          "true"
+        );
 
         return true;
       }
@@ -30,8 +43,29 @@ export const useAdminStore =
       return false;
     },
 
-    logout: () =>
+    logout: () => {
       set({
         isAdmin: false,
-      }),
+      });
+
+      document.cookie =
+        "admin=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+
+      localStorage.removeItem(
+        "isAdmin"
+      );
+    },
+
+    checkAuth: () => {
+      const admin =
+        localStorage.getItem(
+          "isAdmin"
+        );
+
+      if (admin === "true") {
+        set({
+          isAdmin: true,
+        });
+      }
+    },
   }));

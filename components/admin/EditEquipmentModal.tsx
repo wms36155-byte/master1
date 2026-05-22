@@ -4,7 +4,8 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import Button from "../ui/Button";
-
+import { useState } from "react";
+import ImageUpload from "../ui/ImageUpload";
 import {
   Equipment,
   CreateEquipmentDto,
@@ -35,9 +36,12 @@ export default function EditEquipmentModal({
     handleSubmit,
     reset,
   } = useForm<CreateEquipmentDto>();
-
+  
+const [imageUrl, setImageUrl] =
+  useState("");
   useEffect(() => {
     if (equipment) {
+      setImageUrl(equipment.image);
       reset({
         name: equipment.name,
         category: equipment.category,
@@ -80,7 +84,7 @@ export default function EditEquipmentModal({
           pricePerHour: Number(
             data.pricePerHour
           ),
-
+image: imageUrl,
           pricePerDay: Number(
             data.pricePerDay
           ),
@@ -139,11 +143,12 @@ export default function EditEquipmentModal({
             className="bg-black/20 border border-white/10 rounded-2xl px-5 py-4 outline-none"
           />
 
-          <input
-            placeholder="Image URL"
-            {...register("image")}
-            className="bg-black/20 border border-white/10 rounded-2xl px-5 py-4 outline-none md:col-span-2"
-          />
+         <div className="md:col-span-2">
+  <ImageUpload
+    value={imageUrl}
+    onChange={setImageUrl}
+  />
+</div>
 
           <input
             type="number"

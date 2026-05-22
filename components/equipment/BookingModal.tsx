@@ -1,15 +1,22 @@
 "use client";
 
 import { useState } from "react";
+
 import toast from "react-hot-toast";
-import { createBooking } from "@/services/booking.service";
+
 import Button from "../ui/Button";
+
+import {
+  createBooking,
+} from "@/services/booking.service";
 
 type Props = {
   isOpen: boolean;
+
   onClose: () => void;
 
   equipmentName: string;
+
   pricePerDay: number;
 };
 
@@ -19,99 +26,150 @@ export default function BookingModal({
   equipmentName,
   pricePerDay,
 }: Props) {
-  const [days, setDays] = useState(1);
+  const [customerName, setCustomerName] =
+    useState("");
 
-  const totalPrice = days * pricePerDay;
+  const [phone, setPhone] =
+    useState("");
+
+  const [days, setDays] =
+    useState(1);
+
+  const [withOperator, setWithOperator] =
+    useState(false);
+
+  const [loading, setLoading] =
+    useState(false);
 
   if (!isOpen) return null;
 
-  const handleBooking = async () => {
-  try {
-    await createBooking({
-      equipmentName,
-      days,
-      totalPrice,
-      createdAt: new Date().toISOString(),
-    });
+  const totalPrice =
+    days * pricePerDay +
+    (withOperator ? 500000 : 0);
 
-    toast.success("Buyurtma saqlandi");
+  const handleBooking =
+    async () => {
+      try {
+        setLoading(true);
 
-    onClose();
-  } catch (error) {
-    toast.error("Xatolik yuz berdi");
-  }
-};
+        await createBooking({
+          equipmentName,
+
+          customerName,
+
+          phone,
+
+          days,
+
+          totalPrice,
+
+          withOperator,
+
+          createdAt:
+            new Date().toISOString(),
+        });
+
+        toast.success(
+          "Buyurtma yuborildi"
+        );
+
+        onClose();
+      } catch (error) {
+        toast.error(
+          "Xatolik yuz berdi"
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
 
   return (
-    <div className="fixed inset-0 z-[100] bg-black/70 backdrop-blur-md flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-[300] bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
       <div className="w-full max-w-xl bg-[#102E1C] border border-white/10 rounded-3xl p-8">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between mb-8">
           <h2 className="text-3xl font-black">
-            Booking
+            Buyurtma berish
           </h2>
 
           <button
             onClick={onClose}
-            className="text-2xl text-white/60 hover:text-white"
+            className="text-3xl"
           >
             ×
           </button>
         </div>
 
-        <div className="mt-8">
-          <p className="text-white/50">
-            Texnika
-          </p>
+        <div className="space-y-5">
+          <input
+            type="text"
+            placeholder="Ismingiz"
+            value={customerName}
+            onChange={(e) =>
+              setCustomerName(
+                e.target.value
+              )
+            }
+            className="w-full bg-black/20 border border-white/10 rounded-2xl px-5 py-4 outline-none"
+          />
 
-          <h3 className="text-2xl font-bold mt-2">
-            {equipmentName}
-          </h3>
-        </div>
-
-        <div className="mt-8">
-          <label className="text-white/60">
-            Kun soni
-          </label>
+          <input
+            type="text"
+            placeholder="Telefon raqam"
+            value={phone}
+            onChange={(e) =>
+              setPhone(e.target.value)
+            }
+            className="w-full bg-black/20 border border-white/10 rounded-2xl px-5 py-4 outline-none"
+          />
 
           <input
             type="number"
-            min={1}
+            placeholder="Kun soni"
             value={days}
             onChange={(e) =>
-              setDays(Number(e.target.value))
+              setDays(
+                Number(e.target.value)
+              )
             }
-            className="w-full mt-3 bg-black/20 border border-white/10 rounded-2xl px-5 py-4 outline-none focus:border-green-500"
+            className="w-full bg-black/20 border border-white/10 rounded-2xl px-5 py-4 outline-none"
           />
-        </div>
 
-        <div className="mt-8 bg-black/20 rounded-2xl p-5">
-          <div className="flex items-center justify-between">
-            <span className="text-white/60">
-              Kunlik narx
-            </span>
+          <label className="flex items-center gap-3">
+            <input
+              type="checkbox"
+              checked={withOperator}
+              onChange={(e) =>
+                setWithOperator(
+                  e.target.checked
+                )
+              }
+            />
 
             <span>
-              {pricePerDay.toLocaleString()} so‘m
+              Operator bilan
             </span>
+          </label>
+
+          <div className="bg-black/20 rounded-2xl p-5">
+            <p className="text-white/50">
+              Jami narx
+            </p>
+
+            <h2 className="text-4xl font-black text-green-400 mt-2">
+              {totalPrice.toLocaleString()}{" "}
+              so‘m
+            </h2>
           </div>
 
-          <div className="flex items-center justify-between mt-4">
-            <span className="text-white/60">
-              Jami
-            </span>
-
-            <span className="text-3xl font-black text-green-400">
-              {totalPrice.toLocaleString()} so‘m
-            </span>
-          </div>
+          <Button
+            onClick={handleBooking}
+            className="w-full"
+          >
+            {loading
+              ? "Loading..."
+              : "Buyurtma berish"}
+          </Button>
         </div>
-
-        <Button
-          className="w-full mt-8"
-          onClick={handleBooking}
-        >
-          Tasdiqlash
-        </Button>
       </div>
     </div>
   );

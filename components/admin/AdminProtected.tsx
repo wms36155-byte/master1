@@ -22,12 +22,15 @@ export default function AdminProtected({
   );
 
   useEffect(() => {
-    if (!isAdmin) {
+    const hasCookie =
+      document.cookie.includes(
+        "admin=true"
+      );
+
+    if (!isAdmin && !hasCookie) {
       router.push("/admin/login");
     }
   }, [isAdmin, router]);
 
-  if (!isAdmin) return null;
-
-  return children;
+  return <>{children}</>;
 }

@@ -1,11 +1,10 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-
 import toast from "react-hot-toast";
-
 import Button from "../ui/Button";
-
+import { useState } from "react";
+import ImageUpload from "../ui/ImageUpload";
 import {
   CreateEquipmentDto,
 } from "@/types/equipment.types";
@@ -35,6 +34,9 @@ export default function CreateEquipmentModal({
 
   if (!isOpen) return null;
 
+  const [imageUrl, setImageUrl] =
+  useState("");
+
   const onSubmit = async (
     data: CreateEquipmentDto
   ) => {
@@ -45,7 +47,7 @@ export default function CreateEquipmentModal({
         pricePerHour: Number(
           data.pricePerHour
         ),
-
+image: imageUrl,
         pricePerDay: Number(
           data.pricePerDay
         ),
@@ -103,12 +105,12 @@ export default function CreateEquipmentModal({
             className="bg-black/20 border border-white/10 rounded-2xl px-5 py-4 outline-none"
           />
 
-          <input
-            placeholder="Image URL"
-            {...register("image")}
-            className="bg-black/20 border border-white/10 rounded-2xl px-5 py-4 outline-none md:col-span-2"
-          />
-
+        <div className="md:col-span-2">
+  <ImageUpload
+    value={imageUrl}
+    onChange={setImageUrl}
+  />
+</div>
           <input
             type="number"
             placeholder="Soatlik narx"
