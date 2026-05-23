@@ -11,11 +11,11 @@ export type Equipment = {
 
   operatorAvailable: boolean;
 
-  // ✅ NEW
   operatorId?: number;
 
   location: string;
-  rating: number;
+
+  rating: number; // ✅ kerakli field (DOIM NUMBER BO'LISHI KERAK)
 
   description: string;
 };
@@ -32,6 +32,8 @@ export type CreateEquipmentDto = {
   operatorAvailable: boolean;
 
   location: string;
+
+  rating: number; // ✅ BU SHART (sen ishlatyapsan formda)
 
   description: string;
 };
