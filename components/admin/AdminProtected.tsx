@@ -28,7 +28,7 @@ export default function AdminProtected({
       );
 
     if (!isAdmin && !hasCookie) {
-      router.push("/admin/login");
+      router.push("/login");
     }
   }, [isAdmin, router]);
 

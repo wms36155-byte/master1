@@ -2,9 +2,11 @@
 
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import Button from "../ui/Button";
 import { useState } from "react";
+
+import Button from "../ui/Button";
 import ImageUpload from "../ui/ImageUpload";
+
 import {
   CreateEquipmentDto,
 } from "@/types/equipment.types";
@@ -15,9 +17,7 @@ import {
 
 type Props = {
   isOpen: boolean;
-
   onClose: () => void;
-
   refetch: () => void;
 };
 
@@ -26,116 +26,132 @@ export default function CreateEquipmentModal({
   onClose,
   refetch,
 }: Props) {
+
+  // ✅ HOOKS ALWAYS TOP LEVEL
   const {
     register,
     handleSubmit,
     reset,
   } = useForm<CreateEquipmentDto>();
 
-  if (!isOpen) return null;
-
   const [imageUrl, setImageUrl] =
-  useState("");
+    useState("");
+
+  // ✅ AFTER ALL HOOKS
+  if (!isOpen) return null;
 
   const onSubmit = async (
     data: CreateEquipmentDto
   ) => {
     try {
+
       await createEquipment({
         ...data,
 
-        pricePerHour: Number(
-          data.pricePerHour
-        ),
-image: imageUrl,
-        pricePerDay: Number(
-          data.pricePerDay
-        ),
+        image: imageUrl,
 
-        pricePerMonth: Number(
-          data.pricePerMonth
-        ),
+        pricePerHour:
+          +data.pricePerHour || 0,
 
-        rating: Number(data.rating),
+        pricePerDay:
+          +data.pricePerDay || 0,
+
+        pricePerMonth:
+          +data.pricePerMonth || 0,
+
+        rating:
+          +data.rating || 5,
       });
 
       toast.success(
-        "Texnika qo‘shildi"
+        "Texnika qo‘shildi 🚜"
       );
 
       reset();
 
+      setImageUrl("");
+
       refetch();
 
       onClose();
+
     } catch (error) {
-      toast.error("Xatolik");
+      toast.error("Xatolik yuz berdi");
     }
   };
 
   return (
     <div className="fixed inset-0 z-[200] bg-black/70 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+
       <div className="w-full max-w-3xl bg-[#102E1C] border border-white/10 rounded-3xl p-8">
+
+        {/* HEADER */}
         <div className="flex items-center justify-between mb-8">
+
           <h2 className="text-3xl font-black">
             Texnika qo‘shish
           </h2>
 
           <button
             onClick={onClose}
-            className="text-3xl text-white/60"
+            className="text-3xl text-white/60 hover:text-white transition"
           >
             ×
           </button>
+
         </div>
 
+        {/* FORM */}
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="grid md:grid-cols-2 gap-5"
         >
+
           <input
             placeholder="Nomi"
             {...register("name")}
-            className="bg-black/20 border border-white/10 rounded-2xl px-5 py-4 outline-none"
+            className="input"
           />
 
           <input
             placeholder="Kategoriya"
             {...register("category")}
-            className="bg-black/20 border border-white/10 rounded-2xl px-5 py-4 outline-none"
+            className="input"
           />
 
-        <div className="md:col-span-2">
-  <ImageUpload
-    value={imageUrl}
-    onChange={setImageUrl}
-  />
-</div>
+          {/* IMAGE */}
+          <div className="md:col-span-2">
+            <ImageUpload
+              value={imageUrl}
+              onChange={setImageUrl}
+            />
+          </div>
+
           <input
             type="number"
             placeholder="Soatlik narx"
             {...register("pricePerHour")}
-            className="bg-black/20 border border-white/10 rounded-2xl px-5 py-4 outline-none"
+            className="input"
           />
 
           <input
             type="number"
             placeholder="Kunlik narx"
             {...register("pricePerDay")}
-            className="bg-black/20 border border-white/10 rounded-2xl px-5 py-4 outline-none"
+            className="input"
           />
 
           <input
             type="number"
             placeholder="Oylik narx"
             {...register("pricePerMonth")}
-            className="bg-black/20 border border-white/10 rounded-2xl px-5 py-4 outline-none"
+            className="input"
           />
 
           <input
-            placeholder="Location"
+            placeholder="Joylashuv"
             {...register("location")}
-            className="bg-black/20 border border-white/10 rounded-2xl px-5 py-4 outline-none"
+            className="input"
           />
 
           <input
@@ -143,16 +159,17 @@ image: imageUrl,
             step="0.1"
             placeholder="Rating"
             {...register("rating")}
-            className="bg-black/20 border border-white/10 rounded-2xl px-5 py-4 outline-none"
+            className="input"
           />
 
           <textarea
             placeholder="Description"
             {...register("description")}
-            className="bg-black/20 border border-white/10 rounded-2xl px-5 py-4 outline-none md:col-span-2 h-32"
+            className="input md:col-span-2 h-32 resize-none"
           />
 
           <label className="flex items-center gap-3 md:col-span-2">
+
             <input
               type="checkbox"
               {...register(
@@ -163,6 +180,7 @@ image: imageUrl,
             <span>
               Operator mavjud
             </span>
+
           </label>
 
           <Button
@@ -171,6 +189,7 @@ image: imageUrl,
           >
             Saqlash
           </Button>
+
         </form>
       </div>
     </div>

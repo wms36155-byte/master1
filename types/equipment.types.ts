@@ -1,5 +1,6 @@
 export type Equipment = {
   id: number;
+
   name: string;
   category: string;
   image: string;
@@ -9,6 +10,9 @@ export type Equipment = {
   pricePerMonth: number;
 
   operatorAvailable: boolean;
+
+  // ✅ NEW
+  operatorId?: number;
 
   location: string;
   rating: number;
@@ -28,8 +32,6 @@ export type CreateEquipmentDto = {
   operatorAvailable: boolean;
 
   location: string;
-
-  rating: number;
 
   description: string;
 };

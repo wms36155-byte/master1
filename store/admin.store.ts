@@ -14,58 +14,62 @@ type AdminStore = {
 };
 
 export const useAdminStore =
-  create<AdminStore>((set) => ({
-    isAdmin: false,
+  create<AdminStore>(
+    (set) => ({
+      isAdmin: false,
 
-    login: (username, password) => {
-      if (
-        username === "admin" &&
-        password === "12345"
-      ) {
-        // STATE
-        set({
-          isAdmin: true,
-        });
+      // LOGIN
+      login: (
+        username,
+        password
+      ) => {
+        if (
+          username ===
+            "admin" &&
+          password === "12345"
+        ) {
+          localStorage.setItem(
+            "admin",
+            "true"
+          );
 
-        // COOKIE
-        document.cookie =
-          "admin=true; path=/";
+          set({
+            isAdmin: true,
+          });
 
-        // LOCAL STORAGE
-        localStorage.setItem(
-          "isAdmin",
-          "true"
+          return true;
+        }
+
+        return false;
+      },
+
+      // LOGOUT
+      logout: () => {
+        localStorage.removeItem(
+          "admin"
         );
 
-        return true;
-      }
-
-      return false;
-    },
-
-    logout: () => {
-      set({
-        isAdmin: false,
-      });
-
-      document.cookie =
-        "admin=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-
-      localStorage.removeItem(
-        "isAdmin"
-      );
-    },
-
-    checkAuth: () => {
-      const admin =
-        localStorage.getItem(
-          "isAdmin"
-        );
-
-      if (admin === "true") {
         set({
-          isAdmin: true,
+          isAdmin: false,
         });
-      }
-    },
-  }));
+      },
+
+      // CHECK AUTH
+      checkAuth: () => {
+        if (
+          typeof window !==
+          "undefined"
+        ) {
+          const admin =
+            localStorage.getItem(
+              "admin"
+            );
+
+          set({
+            isAdmin:
+              admin === "true",
+          });
+        }
+      },
+    })
+  );

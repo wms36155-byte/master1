@@ -37,12 +37,7 @@ const handleLogout = () => {
       Dashboard
     </h1>
   </div>
-  <button
-  onClick={handleLogout}
-  className="bg-red-500/20 hover:bg-red-500/30 transition-all px-5 py-3 rounded-2xl"
->
-  Logout
-</button>
+ 
 </div>
   );
 }

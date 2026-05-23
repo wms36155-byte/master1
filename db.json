@@ -38,6 +38,18 @@
       "location": "Buxoro",
       "rating": 4.5,
       "description": "Warehouse forklift for logistics."
+    },
+    {
+      "name": "Client",
+      "category": "Ekskavator",
+      "pricePerHour": 788,
+      "pricePerDay": 5678,
+      "pricePerMonth": 89,
+      "location": "tuxumcha",
+      "rating": 44,
+      "description": "вапролд",
+      "operatorAvailable": true,
+      "id": "bGgPAERbNdE"
     }
   ],
   "bookings": [
@@ -63,13 +75,33 @@
     },
     {
       "equipmentName": "CAT 320D",
-      "customerName": "",
-      "phone": "",
+      "customerName": "Customer",
+      "phone": "+998900000000",
+      "days": 5,
+      "totalPrice": 25000000,
+      "withOperator": false,
+      "createdAt": "2026-05-22T13:53:42.180Z",
+      "id": "qd85AVFH-NI"
+    },
+    {
+      "equipmentName": "CAT 320D",
+      "customerName": "Amira",
+      "phone": "994020039",
       "days": 1,
       "totalPrice": 5500000,
       "withOperator": true,
-      "createdAt": "2026-05-22T05:50:22.248Z",
-      "id": "oJ0HVK9OJrw"
+      "createdAt": "2026-05-23T05:48:00.362Z",
+      "id": "Kp1ZuYIwUAg"
+    },
+    {
+      "equipmentName": "CAT 320D",
+      "customerName": "Amira",
+      "phone": "994020039",
+      "days": 1,
+      "totalPrice": 5500000,
+      "withOperator": true,
+      "createdAt": "2026-05-23T05:48:05.780Z",
+      "id": "NSt5saQtwLI"
     }
   ],
   "users": [

@@ -1,24 +1,83 @@
-import { NextResponse } from "next/server";
-
-import type { NextRequest } from "next/server";
+import {
+  NextRequest,
+  NextResponse,
+} from "next/server";
 
 export function middleware(
   request: NextRequest
 ) {
-  const isAdmin =
-    request.cookies.get("admin");
+
+  const token =
+    request.cookies.get(
+      "token"
+    )?.value;
+
+  const pathname =
+    request.nextUrl.pathname;
+
+  // ADMIN ROUTES
+  const isAdminRoute =
+    pathname.startsWith(
+      "/admin"
+    );
+
+  // ADMIN LOGIN PAGE
+  const isAdminLogin =
+    pathname ===
+    "/admin/login";
+
+  // NORMAL LOGIN PAGE
+  const isLoginPage =
+    pathname === "/login";
+
+  // =====================
+  // ADMIN LOGIN OPEN
+  // =====================
+
+  if (isAdminLogin) {
+
+    if (token) {
+
+      return NextResponse.redirect(
+        new URL(
+          "/admin",
+          request.url
+        )
+      );
+    }
+
+    return NextResponse.next();
+  }
+
+  // =====================
+  // ADMIN PROTECT
+  // =====================
 
   if (
-    request.nextUrl.pathname.startsWith(
-      "/admin"
-    ) &&
-    !isAdmin &&
-    request.nextUrl.pathname !==
-      "/admin/login"
+    isAdminRoute &&
+    !token
   ) {
+
     return NextResponse.redirect(
       new URL(
         "/admin/login",
+        request.url
+      )
+    );
+  }
+
+  // =====================
+  // LOGIN PAGE REDIRECT
+  // =====================
+
+  if (
+    isLoginPage &&
+    token
+  ) {
+
+    return NextResponse.redirect(
+      new URL(
+        "/admin",
         request.url
       )
     );
@@ -28,5 +87,10 @@ export function middleware(
 }
 
 export const config = {
-  matcher: ["/admin/:path*"],
+
+  matcher: [
+    "/admin/:path*",
+    "/login",
+  ],
+
 };

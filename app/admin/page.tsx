@@ -6,6 +6,7 @@ import AdminProtected from "@/components/admin/AdminProtected";
 import RevenueChart from "@/components/admin/RevenueChart";
 import RecentBookings from "@/components/admin/RecentBookings";
 
+
 export default function AdminPage() {
   return (
     <AdminProtected>
