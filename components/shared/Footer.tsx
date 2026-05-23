@@ -58,7 +58,7 @@ export default function Footer() {
 
             <div className="text-sm text-white/60 space-y-2">
               <p>📍 Tashkent, Uzbekistan</p>
-              <p>📞 +998 90 123 45 67</p>
+              <p>📞 +998 99 501 00 39</p>
               <p>✉️ support@masterlaser.uz</p>
             </div>
 
