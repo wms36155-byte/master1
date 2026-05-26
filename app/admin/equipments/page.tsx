@@ -5,71 +5,78 @@ import toast from "react-hot-toast";
 
 import AdminSidebar from "@/components/admin/AdminSidebar";
 import CreateEquipmentModal from "@/components/admin/CreateEquipmentModal";
+import EditEquipmentModal from "@/components/admin/EditEquipmentModal";
 
 import {
   deleteEquipment,
   getEquipments,
 } from "@/services/equipment.service";
 
-import type { Equipment } from "@/types/equipment.types";
+import { getOperators } from "@/services/operator.service";
 
-type Operator = {
-  id: number;
-  name: string;
-  status: "available" | "busy";
-};
+import type { Equipment } from "@/types/equipment.types";
+import type { Operator } from "@/types/operator.types";
 
 export default function AdminEquipmentsPage() {
   const [equipments, setEquipments] = useState<Equipment[]>([]);
+  const [operators, setOperators] = useState<Operator[]>([]);
   const [loading, setLoading] = useState(true);
+
   const [openCreate, setOpenCreate] = useState(false);
 
-  const [operators] = useState<Operator[]>([
-    { id: 1, name: "Ali Valiyev", status: "available" },
-    { id: 2, name: "Bekzod Karimov", status: "busy" },
-    { id: 3, name: "Jasur Xasanov", status: "available" },
-  ]);
+  const [editOpen, setEditOpen] = useState(false);
+  const [selectedEquipment, setSelectedEquipment] =
+    useState<Equipment | null>(null);
 
   // =========================
-  // FETCH
+  // FETCH ALL DATA
   // =========================
-  const fetchEquipments = async () => {
+  const fetchData = async () => {
     try {
       setLoading(true);
-      const data = await getEquipments();
-      setEquipments(data);
-    } catch (error) {
-      toast.error("Texnikalarni yuklab bo‘lmadi");
+
+      const [equipmentsData, operatorsData] = await Promise.all([
+        getEquipments(),
+        getOperators(),
+      ]);
+
+      setEquipments(equipmentsData);
+      setOperators(operatorsData);
+    } catch (err) {
+      console.error(err);
+      toast.error("Ma'lumotlarni yuklashda xatolik");
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchEquipments();
+    fetchData();
   }, []);
 
   // =========================
-  // DELETE
+  // DELETE EQUIPMENT
   // =========================
   const handleDelete = async (id: string) => {
     try {
       await deleteEquipment(id);
-
       toast.success("Texnika o‘chirildi");
-      fetchEquipments();
-    } catch (error) {
+      fetchData();
+    } catch {
       toast.error("Delete ishlamadi");
     }
   };
 
   // =========================
-  // ASSIGN OPERATOR
+  // ASSIGN OPERATOR (FIXED + SAFE)
   // =========================
   const handleAssignOperator = (
     equipmentId: string,
-    operatorId: number
+    operatorValue: string
   ) => {
+    const operatorId =
+      operatorValue === "" ? undefined : Number(operatorValue);
+
     const updated = equipments.map((item) =>
       item.id === equipmentId
         ? { ...item, operatorId }
@@ -78,22 +85,39 @@ export default function AdminEquipmentsPage() {
 
     setEquipments(updated);
 
-    toast.success("Operator biriktirildi");
+    toast.success(
+      operatorId
+        ? "Operator biriktirildi"
+        : "Operator olib tashlandi"
+    );
   };
 
+  // =========================
+  // EDIT
+  // =========================
+  const handleEdit = (equipment: Equipment) => {
+    setSelectedEquipment(equipment);
+    setEditOpen(true);
+  };
+
+  const handleCloseEdit = () => {
+    setEditOpen(false);
+    setSelectedEquipment(null);
+  };
+
+  // =========================
+  // UI
+  // =========================
   return (
     <div className="flex min-h-screen bg-[#07130d] text-white overflow-hidden">
-      {/* SIDEBAR */}
       <AdminSidebar />
 
-      {/* CONTENT */}
       <main className="flex-1 overflow-y-auto p-6 md:p-10">
+
         {/* HEADER */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5 mb-10">
           <div>
-            <h1 className="text-5xl font-black tracking-tight">
-              🚜 Equipments
-            </h1>
+            <h1 className="text-5xl font-black">🚜 Equipments</h1>
             <p className="text-white/40 mt-2 text-lg">
               Texnikalarni boshqarish paneli
             </p>
@@ -101,7 +125,7 @@ export default function AdminEquipmentsPage() {
 
           <button
             onClick={() => setOpenCreate(true)}
-            className="bg-green-500 hover:bg-green-600 transition px-7 py-4 rounded-2xl font-bold"
+            className="bg-green-500 hover:bg-green-600 px-7 py-4 rounded-2xl font-bold"
           >
             + Add Equipment
           </button>
@@ -139,13 +163,18 @@ export default function AdminEquipmentsPage() {
                   className="bg-white/5 border border-white/10 rounded-[30px] overflow-hidden"
                 >
                   {/* IMAGE */}
-                  <img
-                    src={item.image}
-                    className="h-64 w-full object-cover"
-                    alt={item.name}
-                  />
+                  {item.image ? (
+                    <img
+                      src={item.image}
+                      className="h-64 w-full object-cover"
+                      alt={item.name}
+                    />
+                  ) : (
+                    <div className="h-64 w-full flex items-center justify-center bg-white/5 text-white/30">
+                      No Image
+                    </div>
+                  )}
 
-                  {/* BODY */}
                   <div className="p-6">
                     <h2 className="text-2xl font-black">
                       {item.name}
@@ -155,13 +184,17 @@ export default function AdminEquipmentsPage() {
                       {item.category}
                     </p>
 
-                    {/* OPERATOR */}
+                    {/* OPERATOR SELECT (FIXED) */}
                     <select
-                      value={item.operatorId || ""}
+                      value={
+                        item.operatorId
+                          ? String(item.operatorId)
+                          : ""
+                      }
                       onChange={(e) =>
                         handleAssignOperator(
                           item.id,
-                          Number(e.target.value)
+                          e.target.value
                         )
                       }
                       className="w-full mt-4 bg-black/20 border border-white/10 rounded-2xl px-4 py-3"
@@ -171,28 +204,34 @@ export default function AdminEquipmentsPage() {
                       </option>
 
                       {operators.map((op) => (
-                        <option key={op.id} value={op.id}>
+                        <option
+                          key={op.id}
+                          value={String(op.id)}
+                        >
                           {op.name}
                         </option>
                       ))}
                     </select>
 
-                    {/* ASSIGNED */}
+                    {/* ASSIGNED OPERATOR */}
                     {assignedOperator && (
                       <div className="mt-4 text-green-400">
                         👷 {assignedOperator.name}
                       </div>
                     )}
 
-                    {/* ACTION */}
+                    {/* ACTIONS */}
                     <div className="flex gap-3 mt-6">
-                      <button className="flex-1 bg-blue-500/20 py-2 rounded-xl">
+                      <button
+                        onClick={() => handleEdit(item)}
+                        className="flex-1 bg-blue-500/20 py-2 rounded-xl hover:bg-blue-500/30"
+                      >
                         Edit
                       </button>
 
                       <button
                         onClick={() => handleDelete(item.id)}
-                        className="flex-1 bg-red-500/20 py-2 rounded-xl"
+                        className="flex-1 bg-red-500/20 py-2 rounded-xl hover:bg-red-500/30"
                       >
                         Delete
                       </button>
@@ -205,11 +244,18 @@ export default function AdminEquipmentsPage() {
         )}
       </main>
 
-      {/* MODAL */}
+      {/* MODALS */}
       <CreateEquipmentModal
         isOpen={openCreate}
         onClose={() => setOpenCreate(false)}
-        refetch={fetchEquipments}
+        refetch={fetchData}
+      />
+
+      <EditEquipmentModal
+        isOpen={editOpen}
+        onClose={handleCloseEdit}
+        equipment={selectedEquipment}
+        refetch={fetchData}
       />
     </div>
   );

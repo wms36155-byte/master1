@@ -1,187 +1,156 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 import AdminSidebar from "@/components/admin/AdminSidebar";
 
-type Operator = {
-  id: number;
-  name: string;
-  phone: string;
-  experience: number;
-  location: string;
-  available: boolean;
-};
+import {
+  getOperators,
+  createOperator,
+  deleteOperator,
+} from "@/services/operator.service";
+
+import type {
+  Operator,
+  OperatorFormState,
+} from "@/types/operator.types";
 
 export default function OperatorsPage() {
+  const [operators, setOperators] = useState<Operator[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
 
-  const [operators, setOperators] =
-    useState<Operator[]>([
-      {
-        id: 1,
-        name: "Ali Valiyev",
-        phone: "+998 90 123 45 67",
-        experience: 5,
-        location: "Tashkent",
-        available: true,
-      },
+  const [form, setForm] = useState<OperatorFormState>({
+    name: "",
+    phone: "",
+    experience: "",
+    location: "",
+  });
 
-      {
-        id: 2,
-        name: "Bekzod Karimov",
-        phone: "+998 91 777 88 99",
-        experience: 3,
-        location: "Samarkand",
-        available: false,
-      },
-    ]);
+  // ======================
+  // GET
+  // ======================
+  useEffect(() => {
+    const load = async () => {
+      try {
+        setLoading(true);
+        const data = await getOperators();
+        setOperators(data);
+      } catch (err) {
+        console.error(err);
+        toast.error("Serverdan ma'lumot olishda xatolik");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const [form, setForm] =
-    useState({
-      name: "",
-      phone: "",
-      experience: "",
-      location: "",
-    });
+    load();
+  }, []);
 
-  // HANDLE CHANGE
+  // ======================
+  // INPUT CHANGE
+  // ======================
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
+    const { name, value } = e.target;
 
-    setForm({
-      ...form,
-      [e.target.name]:
-        e.target.value,
-    });
-
+    setForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
+  // ======================
   // ADD OPERATOR
-  const handleAddOperator = (
-    e: React.FormEvent
-  ) => {
-
+  // ======================
+  const handleAddOperator = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (
-      !form.name ||
-      !form.phone ||
-      !form.location
-    ) {
-      toast.error(
-        "Barcha maydonlarni to‘ldiring"
-      );
+    const { name, phone, experience, location } = form;
 
+    if (!name || !phone || !location) {
+      toast.error("Barcha maydonlarni to‘ldiring");
       return;
     }
 
-    const newOperator: Operator = {
-      id: Date.now(),
+    try {
+      setSubmitting(true);
 
-      name: form.name,
+      const newOperator = await createOperator({
+        name,
+        phone,
+        experience: Number(experience) || 0,
+        location,
+      });
 
-      phone: form.phone,
+      setOperators((prev) => [newOperator, ...prev]);
 
-      experience:
-        Number(form.experience) || 0,
+      setForm({
+        name: "",
+        phone: "",
+        experience: "",
+        location: "",
+      });
 
-      location: form.location,
-
-      available: true,
-    };
-
-    setOperators([
-      newOperator,
-      ...operators,
-    ]);
-
-    setForm({
-      name: "",
-      phone: "",
-      experience: "",
-      location: "",
-    });
-
-    toast.success(
-      "Operator qo‘shildi"
-    );
+      toast.success("Operator qo‘shildi");
+    } catch (err) {
+      console.error(err);
+      toast.error("Operator qo‘shilmadi");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
+  // ======================
   // DELETE
-  const handleDelete = (
-    id: number
-  ) => {
+  // ======================
+  const handleDelete = async (id: number) => {
+    try {
+      await deleteOperator(id);
 
-    setOperators(
-      operators.filter(
-        (item) =>
-          item.id !== id
-      )
-    );
+      setOperators((prev) =>
+        prev.filter((op) => op.id !== id)
+      );
 
-    toast.success(
-      "Operator o‘chirildi"
-    );
+      toast.success("Operator o‘chirildi");
+    } catch (err) {
+      console.error(err);
+      toast.error("O‘chirishda xatolik");
+    }
   };
 
-  // TOGGLE STATUS
-  const toggleAvailability = (
-    id: number
-  ) => {
-
-    setOperators(
-      operators.map((item) =>
-        item.id === id
-          ? {
-              ...item,
-              available:
-                !item.available,
-            }
-          : item
-      )
-    );
-  };
-
+  // ======================
+  // UI
+  // ======================
   return (
     <main className="min-h-screen flex bg-[#08140D] text-white">
-
-      {/* SIDEBAR */}
       <AdminSidebar />
 
-      {/* CONTENT */}
       <div className="flex-1 p-6 md:p-10 overflow-y-auto">
 
         {/* HEADER */}
         <div className="flex items-center justify-between mb-10">
-
           <div>
-
             <h1 className="text-5xl font-black">
               👷 Operators
             </h1>
-
             <p className="text-white/40 mt-2">
               Operator management panel
             </p>
-
           </div>
 
           <div className="bg-green-500/20 text-green-400 px-5 py-3 rounded-2xl font-semibold">
             {operators.length} Operators
           </div>
-
         </div>
 
         {/* FORM */}
         <form
-          onSubmit={
-            handleAddOperator
-          }
+          onSubmit={handleAddOperator}
           className="grid md:grid-cols-4 gap-4 bg-[#102E1C] border border-white/10 rounded-3xl p-6 mb-10"
         >
-
           <input
             name="name"
             value={form.name}
@@ -217,113 +186,53 @@ export default function OperatorsPage() {
 
           <button
             type="submit"
-            className="md:col-span-4 bg-green-500 hover:bg-green-600 transition py-4 rounded-2xl font-bold"
+            disabled={submitting}
+            className="md:col-span-4 bg-green-500 hover:bg-green-600 transition py-4 rounded-2xl font-bold disabled:opacity-50"
           >
-            + Add Operator
+            {submitting ? "Adding..." : "+ Add Operator"}
           </button>
-
         </form>
 
         {/* LIST */}
-        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+        {loading ? (
+          <p className="text-white/50">Loading...</p>
+        ) : operators.length === 0 ? (
+          <p className="text-white/40">No operators found</p>
+        ) : (
+          <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+            {operators.map((item) => (
+              <div
+                key={item.id}
+                className="bg-[#102E1C] border border-white/10 rounded-3xl p-6 hover:bg-[#143823] transition"
+              >
+                <h2 className="text-2xl font-bold">
+                  {item.name}
+                </h2>
 
-          {operators.map((item) => (
+                <p className="text-white/40">
+                  {item.phone}
+                </p>
 
-            <div
-              key={item.id}
-              className="bg-[#102E1C] border border-white/10 rounded-3xl p-6 hover:bg-[#143823] transition"
-            >
+                <p className="text-white/40 mt-1">
+                  {item.location}
+                </p>
 
-              {/* TOP */}
-              <div className="flex items-start justify-between">
+                <p className="text-white/30 mt-2 text-sm">
+                  {item.experience} years experience
+                </p>
 
-                <div>
-
-                  <h2 className="text-2xl font-bold">
-                    {item.name}
-                  </h2>
-
-                  <p className="text-white/40 mt-1">
-                    {item.phone}
-                  </p>
-
+                <div className="flex gap-3 mt-6">
+                  <button
+                    onClick={() => handleDelete(item.id)}
+                    className="flex-1 bg-red-500/20 text-red-300 py-3 rounded-2xl hover:bg-red-500/30 transition"
+                  >
+                    Delete
+                  </button>
                 </div>
-
-                <div
-                  className={`px-3 py-1 rounded-xl text-sm font-semibold ${
-                    item.available
-                      ? "bg-green-500/20 text-green-400"
-                      : "bg-red-500/20 text-red-400"
-                  }`}
-                >
-                  {item.available
-                    ? "Available"
-                    : "Busy"}
-                </div>
-
               </div>
-
-              {/* INFO */}
-              <div className="mt-6 space-y-3">
-
-                <div className="flex justify-between text-sm">
-
-                  <span className="text-white/40">
-                    Experience
-                  </span>
-
-                  <span className="font-semibold">
-                    {item.experience} years
-                  </span>
-
-                </div>
-
-                <div className="flex justify-between text-sm">
-
-                  <span className="text-white/40">
-                    Location
-                  </span>
-
-                  <span className="font-semibold">
-                    {item.location}
-                  </span>
-
-                </div>
-
-              </div>
-
-              {/* ACTIONS */}
-              <div className="flex gap-3 mt-8">
-
-                <button
-                  onClick={() =>
-                    toggleAvailability(
-                      item.id
-                    )
-                  }
-                  className="flex-1 bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 py-3 rounded-2xl transition"
-                >
-                  Toggle
-                </button>
-
-                <button
-                  onClick={() =>
-                    handleDelete(
-                      item.id
-                    )
-                  }
-                  className="flex-1 bg-red-500/20 hover:bg-red-500/30 text-red-300 py-3 rounded-2xl transition"
-                >
-                  Delete
-                </button>
-
-              </div>
-
-            </div>
-
-          ))}
-
-        </div>
+            ))}
+          </div>
+        )}
 
       </div>
     </main>

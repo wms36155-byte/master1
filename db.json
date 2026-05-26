@@ -14,32 +14,7 @@
       "description": "Professional excavator for construction projects."
     },
     {
-      "id": "2",
-      "name": "JCB 3CX",
-      "category": "Pogruzchik",
-      "image": "https://images.unsplash.com/photo-1621886292650-520c2f58b89f?q=80&w=1200&auto=format&fit=crop",
-      "pricePerHour": 350000,
-      "pricePerDay": 4000000,
-      "pricePerMonth": 95000000,
-      "operatorAvailable": true,
-      "location": "Samarqand",
-      "rating": 4.7,
-      "description": "Powerful loader for industrial work."
-    },
-    {
-      "id": "3",
-      "name": "Toyota Forklift",
-      "category": "Forklift",
-      "image": "https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?q=80&w=1200&auto=format&fit=crop",
-      "pricePerHour": 200000,
-      "pricePerDay": 2500000,
-      "pricePerMonth": 70000000,
-      "operatorAvailable": false,
-      "location": "Buxoro",
-      "rating": 4.5,
-      "description": "Warehouse forklift for logistics."
-    },
-    {
+      "id": "52ba",
       "name": "Client",
       "category": "Ekskavator",
       "pricePerHour": 788,
@@ -47,9 +22,22 @@
       "pricePerMonth": 89,
       "location": "tuxumcha",
       "rating": 44,
-      "description": "вапролд",
+      "description": "",
       "operatorAvailable": true,
-      "id": "bGgPAERbNdE"
+      "image": ""
+    },
+    {
+      "id": "c081",
+      "name": "Amira",
+      "category": "Pogruzchik",
+      "pricePerHour": 788,
+      "pricePerDay": 5678,
+      "pricePerMonth": 89,
+      "location": "samarqand",
+      "rating": 49,
+      "description": "",
+      "operatorAvailable": true,
+      "image": ""
     }
   ],
   "bookings": [
@@ -106,17 +94,26 @@
   "operators": [
     {
       "id": "1",
-      "name": "Jahongir",
-      "phone": "+998901234567",
-      "experience": "5 yil",
-      "rating": 4.8
+      "name": "Ali",
+      "phone": "123",
+      "experience": 2,
+      "location": "Tashkent",
+      "available": true
     },
     {
-      "id": "2",
-      "name": "Azizbek",
-      "phone": "+998907654321",
-      "experience": "3 yil",
-      "rating": 4.6
+      "id": "de45",
+      "name": "Client",
+      "phone": "+998 50 037 13 86",
+      "experience": 4,
+      "location": "bukhra"
+    },
+    {
+      "id": "8b59",
+      "name": "Client",
+      "phone": "+998 50 037 13 86",
+      "experience": 4,
+      "location": "samarqand",
+      "available": true
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

@@ -31,10 +31,9 @@ export default function EquipmentTable() {
   const fetchData = async () => {
     try {
       setLoading(true);
-
       const data = await getEquipments();
       setEquipments(data);
-    } catch (error) {
+    } catch {
       toast.error("Ma’lumotlarni olishda xatolik");
     } finally {
       setLoading(false);
@@ -47,11 +46,9 @@ export default function EquipmentTable() {
   const handleDelete = async (id: string) => {
     try {
       await deleteEquipment(id);
-
       toast.success("Texnika o‘chirildi");
-
       fetchData();
-    } catch (error) {
+    } catch {
       toast.error("O‘chirishda xatolik");
     }
   };
@@ -59,6 +56,22 @@ export default function EquipmentTable() {
   useEffect(() => {
     fetchData();
   }, []);
+
+  // 🔥 IMPORTANT FIX: edit open handler
+  const handleEdit = (equipment: Equipment) => {
+    setSelectedEquipment(equipment);
+    setEditOpen(true);
+  };
+
+  // 🔥 IMPORTANT FIX: close modal cleanup
+  const handleCloseEdit = () => {
+    setEditOpen(false);
+
+    // small delay so form reset properly
+    setTimeout(() => {
+      setSelectedEquipment(null);
+    }, 200);
+  };
 
   return (
     <>
@@ -75,7 +88,7 @@ export default function EquipmentTable() {
         </button>
       </div>
 
-      {/* EMPTY STATE */}
+      {/* EMPTY */}
       {equipments.length === 0 ? (
         <div className="bg-[#102E1C] border border-white/10 rounded-3xl p-10 text-center text-white/50">
           Texnikalar mavjud emas
@@ -98,7 +111,7 @@ export default function EquipmentTable() {
                 {equipments.map((equipment) => (
                   <tr
                     key={equipment.id}
-                    className="border-b border-white/5 hover:bg-white/5 transition-colors"
+                    className="border-b border-white/5 hover:bg-white/5"
                   >
                     <td className="p-5 font-bold">{equipment.name}</td>
 
@@ -114,12 +127,10 @@ export default function EquipmentTable() {
 
                     <td className="p-5">
                       <div className="flex items-center gap-3">
-                        {/* EDIT */}
+
+                        {/* EDIT FIX */}
                         <button
-                          onClick={() => {
-                            setSelectedEquipment(equipment);
-                            setEditOpen(true);
-                          }}
+                          onClick={() => handleEdit(equipment)}
                           className="w-10 h-10 rounded-xl bg-blue-500/20 hover:bg-blue-500/30 flex items-center justify-center"
                         >
                           <Pencil size={18} className="text-blue-400" />
@@ -145,7 +156,7 @@ export default function EquipmentTable() {
       {/* MODALS */}
       <EditEquipmentModal
         isOpen={editOpen}
-        onClose={() => setEditOpen(false)}
+        onClose={handleCloseEdit}
         equipment={selectedEquipment}
         refetch={fetchData}
       />

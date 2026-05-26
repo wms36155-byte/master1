@@ -1,24 +1,20 @@
 "use client";
 
 import Link from "next/link";
+import toast from "react-hot-toast";
 
 import {
+  Heart,
   MapPin,
   Star,
-  Heart,
 } from "lucide-react";
-
-import { Equipment } from "@/types/equipment.types";
 
 import Button from "../ui/Button";
 
-import toast from "react-hot-toast";
+import { Equipment } from "@/types/equipment.types";
 
 import { useCartStore } from "@/store/cart.store";
-
-import {
-  useFavoriteStore,
-} from "@/store/favorite.store";
+import { useFavoriteStore } from "@/store/favorite.store";
 
 type Props = {
   equipment: Equipment;
@@ -40,33 +36,37 @@ export default function EquipmentCard({
   const isFavorite =
     useFavoriteStore((state) =>
       state.isFavorite(
-        Number(equipment.id)
+        String(equipment.id)
       )
     );
 
+  const handleFavorite = (
+    e: React.MouseEvent
+  ) => {
+    e.preventDefault();
+
+    toggleFavorite(equipment);
+
+    toast.success(
+      isFavorite
+        ? "Favoritesdan olib tashlandi"
+        : "Favoritesga qo‘shildi"
+    );
+  };
+
   return (
-    <div className="bg-[#102E1C] rounded-3xl overflow-hidden border border-white/10 hover:border-green-500/40 transition-all duration-300 group">
+    <div className="bg-[#102E1C] rounded-3xl overflow-hidden border border-white/10">
+
       {/* IMAGE */}
-      <div className="relative overflow-hidden">
+      <div className="relative">
+
         {/* FAVORITE */}
         <button
-          onClick={(e) => {
-            e.preventDefault();
-
-            toggleFavorite(
-              equipment
-            );
-
-            toast.success(
-              isFavorite
-                ? "Favoritesdan olib tashlandi"
-                : "Favoritesga qo‘shildi"
-            );
-          }}
-          className="absolute top-4 right-4 z-20 w-12 h-12 rounded-full bg-black/50 backdrop-blur-md flex items-center justify-center hover:scale-110 transition-all"
+          onClick={handleFavorite}
+          className="absolute top-4 right-4 z-10 bg-black/50 w-11 h-11 rounded-full flex items-center justify-center"
         >
           <Heart
-            size={22}
+            size={20}
             className={
               isFavorite
                 ? "fill-red-500 text-red-500"
@@ -75,38 +75,36 @@ export default function EquipmentCard({
           />
         </button>
 
-        {/* IMAGE */}
         <img
-          src={equipment.image}
+          src={
+            equipment.image ||
+            "/placeholder.jpg"
+          }
           alt={equipment.name}
-          className="w-full h-60 object-cover group-hover:scale-110 transition-transform duration-500"
+          className="w-full h-60 object-cover"
         />
 
-        {/* CATEGORY */}
-        <div className="absolute top-4 left-4 bg-green-500 text-white text-xs px-3 py-1 rounded-full">
-          {equipment.category}
-        </div>
       </div>
 
       {/* CONTENT */}
       <div className="p-5">
-        {/* TOP */}
-        <div className="flex items-start justify-between gap-4">
+
+        <div className="flex items-start justify-between">
+
           <div>
-            <h3 className="text-2xl font-bold line-clamp-1">
+            <h2 className="text-2xl font-bold">
               {equipment.name}
-            </h3>
+            </h2>
 
             <div className="flex items-center gap-2 text-white/60 mt-2">
               <MapPin size={16} />
-
-              <span className="text-sm">
+              <span>
                 {equipment.location}
               </span>
             </div>
           </div>
 
-          <div className="flex items-center gap-1 text-yellow-400 shrink-0">
+          <div className="flex items-center gap-1 text-yellow-400">
             <Star
               size={16}
               fill="currentColor"
@@ -116,6 +114,7 @@ export default function EquipmentCard({
               {equipment.rating}
             </span>
           </div>
+
         </div>
 
         {/* PRICE */}
@@ -124,18 +123,18 @@ export default function EquipmentCard({
             Boshlang‘ich narx
           </p>
 
-          <h2 className="text-3xl font-black text-green-400 mt-1">
-            {equipment.pricePerHour.toLocaleString()}{" "}
+          <h1 className="text-3xl font-black text-green-400">
+            {Number(
+              equipment.pricePerHour
+            ).toLocaleString()}{" "}
             so‘m
-          </h2>
-
-          <span className="text-white/50 text-sm">
-            / soatiga
-          </span>
+          </h1>
         </div>
 
-        {/* ACTIONS */}
+        {/* BUTTONS */}
         <div className="flex gap-3 mt-6">
+
+          {/* DETAIL PAGE */}
           <Link
             href={`/equipment/${equipment.id}`}
             className="flex-1"
@@ -146,7 +145,7 @@ export default function EquipmentCard({
           </Link>
 
           <Button
-            className="bg-white/10 hover:bg-white/20 px-5"
+            className="px-5 bg-white/10"
             onClick={() => {
               addToCart(equipment);
 
@@ -157,6 +156,7 @@ export default function EquipmentCard({
           >
             +
           </Button>
+
         </div>
       </div>
     </div>

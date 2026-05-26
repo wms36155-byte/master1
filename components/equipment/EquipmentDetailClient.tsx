@@ -1,51 +1,63 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback, memo } from "react";
 
 import Button from "../ui/Button";
-
 import BookingModal from "./BookingModal";
 
 type Props = {
   equipmentName: string;
-
   pricePerDay: number;
+  operatorAvailable?: boolean;
 };
 
-export default function EquipmentDetailClient({
+function EquipmentDetailClient({
   equipmentName,
   pricePerDay,
+  operatorAvailable = false,
 }: Props) {
-  const [open, setOpen] =
-    useState(false);
+  const [open, setOpen] = useState(false);
+
+  const openModal = useCallback(() => {
+    setOpen(true);
+  }, []);
+
+  const closeModal = useCallback(() => {
+    setOpen(false);
+  }, []);
 
   return (
     <>
+      {/* ACTION BUTTONS */}
       <div className="flex flex-col md:flex-row gap-4">
-        <Button
-          onClick={() => setOpen(true)}
-          className="flex-1"
-        >
+
+        {/* BOOKING */}
+        <Button onClick={openModal} className="flex-1">
           Buyurtma berish
         </Button>
 
-        <Button className="bg-white/10 hover:bg-white/20 flex-1">
+        {/* OPERATOR */}
+        <Button
+          disabled={!operatorAvailable}
+          className={`flex-1 ${
+            operatorAvailable
+              ? "bg-white/10 hover:bg-white/20"
+              : "bg-white/5 cursor-not-allowed opacity-50"
+          }`}
+        >
           Operator bilan
         </Button>
       </div>
 
+      {/* MODAL */}
       <BookingModal
         isOpen={open}
-        onClose={() =>
-          setOpen(false)
-        }
-        equipmentName={
-          equipmentName
-        }
-        pricePerDay={
-          pricePerDay
-        }
+        onClose={closeModal}
+        equipmentName={equipmentName}
+        pricePerDay={pricePerDay}
       />
     </>
   );
 }
+
+export default memo(EquipmentDetailClient);

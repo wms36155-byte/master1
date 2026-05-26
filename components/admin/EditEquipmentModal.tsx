@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { X } from "lucide-react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
@@ -23,8 +24,12 @@ export default function EditEquipmentModal({
   equipment,
   refetch,
 }: Props) {
-  const { register, handleSubmit, reset } =
-    useForm<CreateEquipmentDto>();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { isSubmitting },
+  } = useForm<CreateEquipmentDto>();
 
   const [imageUrl, setImageUrl] = useState("");
 
@@ -34,15 +39,15 @@ export default function EditEquipmentModal({
     setImageUrl(equipment.image || "");
 
     reset({
-      name: equipment.name,
-      category: equipment.category,
-      pricePerHour: equipment.pricePerHour,
-      pricePerDay: equipment.pricePerDay,
-      pricePerMonth: equipment.pricePerMonth,
-      location: equipment.location,
-      rating: equipment.rating,
-      description: equipment.description,
-      operatorAvailable: equipment.operatorAvailable,
+      name: equipment.name || "",
+      category: equipment.category || "",
+      pricePerHour: equipment.pricePerHour || 0,
+      pricePerDay: equipment.pricePerDay || 0,
+      pricePerMonth: equipment.pricePerMonth || 0,
+      location: equipment.location || "",
+      rating: equipment.rating || 0,
+      description: equipment.description || "",
+      operatorAvailable: equipment.operatorAvailable || false,
     });
   }, [equipment, reset]);
 
@@ -53,71 +58,144 @@ export default function EditEquipmentModal({
       await updateEquipment(equipment.id, {
         ...data,
         image: imageUrl,
-
-        pricePerHour: Number(data.pricePerHour || 0),
-        pricePerDay: Number(data.pricePerDay || 0),
-        pricePerMonth: Number(data.pricePerMonth || 0),
-
-        // ✅ FIXED
-        rating: data.rating || 0,
+        pricePerHour: Number(data.pricePerHour),
+        pricePerDay: Number(data.pricePerDay),
+        pricePerMonth: Number(data.pricePerMonth),
+        rating: Number(data.rating),
       });
 
       toast.success("Texnika yangilandi");
-
       refetch();
       onClose();
-    } catch {
-      toast.error("Xatolik");
+    } catch (err) {
+      console.log(err);
+      toast.error("Xatolik yuz berdi");
     }
   };
 
   return (
-    <div className="fixed inset-0 z-[200] bg-black/70 backdrop-blur-md flex items-center justify-center p-4">
-      <div className="w-full max-w-3xl bg-[#102E1C] border border-white/10 rounded-3xl p-8">
+    <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/70 backdrop-blur-md p-3">
 
-        <div className="flex justify-between mb-8">
-          <h2 className="text-3xl font-black">Tahrirlash</h2>
-          <button onClick={onClose} className="text-3xl">×</button>
+      {/* MODAL */}
+      <div className="w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-2xl bg-[#0f2a1b] border border-white/10 shadow-2xl">
+
+        {/* HEADER */}
+        <div className="flex items-center justify-between px-5 py-4 border-b border-white/10">
+          <div>
+            <h2 className="text-lg font-bold">
+              ✏️ Texnikani tahrirlash
+            </h2>
+            <p className="text-white/40 text-xs">
+              Ma’lumotlarni yangilang
+            </p>
+          </div>
+
+          <button
+            onClick={onClose}
+            className="w-8 h-8 flex items-center justify-center rounded-lg bg-white/5 hover:bg-white/10 transition"
+          >
+            <X size={18} />
+          </button>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="grid md:grid-cols-2 gap-5">
+        {/* FORM */}
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="grid grid-cols-1 gap-4 p-5"
+        >
 
-          <input placeholder="Nomi" {...register("name")} className="input" />
-          <input placeholder="Kategoriya" {...register("category")} className="input" />
+          {/* NAME + CATEGORY */}
+          <div className="grid grid-cols-2 gap-3">
+            <input
+              {...register("name")}
+              className="input text-sm h-10"
+              placeholder="Nomi"
+            />
 
-          <div className="md:col-span-2">
+            <input
+              {...register("category")}
+              className="input text-sm h-10"
+              placeholder="Kategoriya"
+            />
+          </div>
+
+          {/* IMAGE */}
+          <div>
             <ImageUpload value={imageUrl} onChange={setImageUrl} />
           </div>
 
-          <input type="number" placeholder="Soatlik narx" {...register("pricePerHour")} className="input" />
-          <input type="number" placeholder="Kunlik narx" {...register("pricePerDay")} className="input" />
-          <input type="number" placeholder="Oylik narx" {...register("pricePerMonth")} className="input" />
+          {/* PRICES */}
+          <div className="grid grid-cols-3 gap-2">
+            <input
+              type="number"
+              {...register("pricePerHour", { valueAsNumber: true })}
+              className="input text-sm h-10"
+              placeholder="Soat"
+            />
 
-          <input placeholder="Location" {...register("location")} className="input" />
+            <input
+              type="number"
+              {...register("pricePerDay", { valueAsNumber: true })}
+              className="input text-sm h-10"
+              placeholder="Kun"
+            />
 
-          {/* ✅ FIX */}
-          <input
-            type="number"
-            step="0.1"
-            placeholder="Rating"
-            {...register("rating", { valueAsNumber: true })}
-            className="input"
-          />
+            <input
+              type="number"
+              {...register("pricePerMonth", { valueAsNumber: true })}
+              className="input text-sm h-10"
+              placeholder="Oy"
+            />
+          </div>
 
+          {/* LOCATION + RATING */}
+          <div className="grid grid-cols-2 gap-3">
+            <input
+              {...register("location")}
+              className="input text-sm h-10"
+              placeholder="Joylashuv"
+            />
+
+            <input
+              type="number"
+              step="0.1"
+              {...register("rating", { valueAsNumber: true })}
+              className="input text-sm h-10"
+              placeholder="⭐"
+            />
+          </div>
+
+          {/* DESCRIPTION */}
           <textarea
-            placeholder="Description"
             {...register("description")}
-            className="input md:col-span-2 h-32"
+            className="input text-sm h-20 resize-none"
+            placeholder="Tavsif..."
           />
 
-          <label className="flex items-center gap-3 md:col-span-2">
+          {/* CHECKBOX */}
+          <label className="flex items-center gap-2 text-sm text-white/80">
             <input type="checkbox" {...register("operatorAvailable")} />
-            <span>Operator mavjud</span>
+            Operator mavjud
           </label>
 
-          <Button type="submit" className="md:col-span-2">
-            Yangilash
-          </Button>
+          {/* ACTION */}
+          <div className="flex gap-2 pt-1">
+            <Button
+              type="button"
+              onClick={onClose}
+              className="w-1/2 bg-white/10 hover:bg-white/20 text-sm py-2"
+            >
+              Bekor
+            </Button>
+
+            <Button
+              type="submit"
+              className="w-1/2 text-sm py-2"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Saqlanmoqda..." : "Saqlash"}
+            </Button>
+          </div>
 
         </form>
       </div>
