@@ -2,13 +2,14 @@
 
 import Link from "next/link";
 import Container from "./Container";
-import { FaInstagram } from "react-icons/fa";
-import { FaTelegramPlane } from "react-icons/fa";
+import { FaInstagram, FaTelegramPlane } from "react-icons/fa";
 
 export default function Footer() {
   return (
-    <footer className="border-t border-white/10 bg-black/30 backdrop-blur-xl mt-20">
-
+    <footer
+      id="contact"
+      className="border-t border-white/10 bg-black/30 backdrop-blur-xl mt-20"
+    >
       <Container className="py-12">
 
         <div className="grid md:grid-cols-3 gap-10">
@@ -20,7 +21,7 @@ export default function Footer() {
             </h2>
 
             <p className="text-white/50 text-sm mt-3 leading-relaxed">
-              Zamonaviy texnika ijarasi platformasi.  
+              Zamonaviy texnika ijarasi platformasi.
               Tez, ishonchli va qulay xizmat.
             </p>
           </div>
@@ -32,6 +33,7 @@ export default function Footer() {
             </h3>
 
             <div className="flex flex-col gap-2 text-sm text-white/60">
+
               <Link href="/" className="hover:text-green-400 transition">
                 Bosh sahifa
               </Link>
@@ -47,6 +49,12 @@ export default function Footer() {
               <Link href="/login" className="hover:text-green-400 transition">
                 Login
               </Link>
+
+              {/* BONUS: CONTACT SCROLL LINK */}
+              <Link href="#contact" className="hover:text-green-400 transition">
+                Bog‘lanish
+              </Link>
+
             </div>
           </div>
 
@@ -65,15 +73,21 @@ export default function Footer() {
             {/* SOCIAL ICONS */}
             <div className="flex items-center gap-4 mt-5">
 
-              {/* INSTAGRAM */}
-<a href="https://instagram.com/masterlaser_uz" target="_blank">
-  <FaInstagram size={20} className="text-pink-400" />
-</a>
+              <a
+                href="https://instagram.com/masterlaser_uz"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <FaInstagram size={20} className="text-pink-400" />
+              </a>
 
-{/* TELEGRAM */}
-<a href="https://t.me/masterlaser" target="_blank">
-  <FaTelegramPlane size={20} className="text-blue-400" />
-</a>
+              <a
+                href="https://t.me/masterlaser"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <FaTelegramPlane size={20} className="text-blue-400" />
+              </a>
 
             </div>
 
@@ -87,7 +101,6 @@ export default function Footer() {
         </div>
 
       </Container>
-
     </footer>
   );
 }

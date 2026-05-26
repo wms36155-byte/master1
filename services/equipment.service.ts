@@ -9,12 +9,12 @@ import type {
 // GET ALL EQUIPMENTS
 // =========================
 export const getEquipments =
-  async (): Promise<
-    Equipment[]
-  > => {
+  async (): Promise<Equipment[]> => {
     try {
       const { data } =
-        await api.get("/equipments");
+        await api.get<Equipment[]>(
+          "/equipments"
+        );
 
       return data;
     } catch (error) {
@@ -22,7 +22,6 @@ export const getEquipments =
         "Get equipments error:",
         error
       );
-
       throw error;
     }
   };
@@ -46,7 +45,6 @@ export const getEquipmentById =
         "Get equipment by id error:",
         error
       );
-
       throw error;
     }
   };
@@ -60,9 +58,7 @@ export const createEquipment =
   ): Promise<Equipment> => {
     try {
       const { data } =
-        await api.post<
-          Equipment
-        >(
+        await api.post<Equipment>(
           "/equipments",
           payload
         );
@@ -73,7 +69,6 @@ export const createEquipment =
         "Create equipment error:",
         error
       );
-
       throw error;
     }
   };
@@ -88,9 +83,7 @@ export const updateEquipment =
   ): Promise<Equipment> => {
     try {
       const { data } =
-        await api.patch<
-          Equipment
-        >(
+        await api.patch<Equipment>(
           `/equipments/${id}`,
           payload
         );
@@ -101,7 +94,6 @@ export const updateEquipment =
         "Update equipment error:",
         error
       );
-
       throw error;
     }
   };
@@ -122,7 +114,6 @@ export const deleteEquipment =
         "Delete equipment error:",
         error
       );
-
       throw error;
     }
   };

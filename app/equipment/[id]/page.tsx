@@ -1,34 +1,31 @@
 import Image from "next/image";
 
-import {
-  MapPin,
-  Star,
-} from "lucide-react";
+import { MapPin, Star } from "lucide-react";
 
 import EquipmentDetailClient from "@/components/equipment/EquipmentDetailClient";
-
 import Navbar from "@/components/shared/Navbar";
 import Container from "@/components/shared/Container";
 
-import Button from "@/components/ui/Button";
-
-import {
-  getEquipmentById,
-} from "@/services/equipment.service";
+import { getEquipmentById } from "@/services/equipment.service";
 
 type Props = {
-  params: Promise<{
+  params: {
     id: string;
-  }>;
+  };
 };
 
-export default async function EquipmentDetailPage({
-  params,
-}: Props) {
-  const { id } = await params;
+export default async function EquipmentDetailPage({ params }: Props) {
+  const { id } = params;
 
-  const equipment =
-    await getEquipmentById(id);
+  const equipment = await getEquipmentById(id);
+
+  if (!equipment) {
+    return (
+      <div className="p-10 text-center text-white/50">
+        Equipment topilmadi
+      </div>
+    );
+  }
 
   return (
     <main>
@@ -42,7 +39,7 @@ export default async function EquipmentDetailPage({
               <div className="absolute inset-0 bg-green-500 blur-[120px] opacity-20" />
 
               <Image
-                src={equipment.image}
+                src={equipment.image || "/placeholder.jpg"}
                 alt={equipment.name}
                 width={1000}
                 height={700}
@@ -74,21 +71,12 @@ export default async function EquipmentDetailPage({
               <div className="flex items-center gap-6 mt-6 flex-wrap">
                 <div className="flex items-center gap-2 text-white/60">
                   <MapPin size={18} />
-
-                  <span>
-                    {equipment.location}
-                  </span>
+                  <span>{equipment.location}</span>
                 </div>
 
                 <div className="flex items-center gap-2 text-yellow-400">
-                  <Star
-                    size={18}
-                    fill="currentColor"
-                  />
-
-                  <span>
-                    {equipment.rating}
-                  </span>
+                  <Star size={18} fill="currentColor" />
+                  <span>{equipment.rating}</span>
                 </div>
               </div>
 
@@ -99,56 +87,35 @@ export default async function EquipmentDetailPage({
 
               {/* PRICING */}
               <div className="grid md:grid-cols-3 gap-4 mt-10">
-                {/* HOUR */}
                 <div className="bg-[#102E1C] border border-white/10 rounded-2xl p-5">
-                  <p className="text-white/50">
-                    Soatiga
-                  </p>
-
+                  <p className="text-white/50">Soatiga</p>
                   <h2 className="text-2xl font-black text-green-400 mt-2">
-                    {equipment.pricePerHour.toLocaleString()}{" "}
-                    so‘m
+                    {equipment.pricePerHour.toLocaleString()} so‘m
                   </h2>
                 </div>
 
-                {/* DAY */}
                 <div className="bg-[#102E1C] border border-white/10 rounded-2xl p-5">
-                  <p className="text-white/50">
-                    Kuniga
-                  </p>
-
+                  <p className="text-white/50">Kuniga</p>
                   <h2 className="text-2xl font-black text-green-400 mt-2">
-                    {equipment.pricePerDay.toLocaleString()}{" "}
-                    so‘m
+                    {equipment.pricePerDay.toLocaleString()} so‘m
                   </h2>
                 </div>
 
-                {/* MONTH */}
                 <div className="bg-[#102E1C] border border-white/10 rounded-2xl p-5">
-                  <p className="text-white/50">
-                    Oyiga
-                  </p>
-
+                  <p className="text-white/50">Oyiga</p>
                   <h2 className="text-2xl font-black text-green-400 mt-2">
-                    {equipment.pricePerMonth.toLocaleString()}{" "}
-                    so‘m
+                    {equipment.pricePerMonth.toLocaleString()} so‘m
                   </h2>
                 </div>
               </div>
 
-              {/* CLIENT BOOKING */}
+              {/* CLIENT */}
               <div className="mt-10">
                 <EquipmentDetailClient
-                  equipmentName={
-                    equipment.name
-                  }
-                  pricePerDay={
-                    equipment.pricePerDay
-                  }
+                  equipmentName={equipment.name}
+                  pricePerDay={equipment.pricePerDay}
                 />
               </div>
-
-             
             </div>
           </div>
         </Container>

@@ -1,6 +1,6 @@
 import Button from "../ui/Button";
 import Container from "../shared/Container";
-
+import Link from "next/link";
 export default function Hero() {
   return (
     <section className="relative py-24 overflow-hidden">
@@ -22,13 +22,16 @@ export default function Hero() {
             </p>
 
             <div className="flex items-center gap-4 mt-8">
-              <Button>
-                Texnika tanlash
-              </Button>
-
-              <Button className="bg-white/10 hover:bg-white/20">
-                Bog‘lanish
-              </Button>
+             <Link href="/equipment">
+  <Button>
+    Texnika tanlash
+  </Button>
+</Link>
+              <Link href="#contact">
+  <Button className="bg-white/10 hover:bg-white/20">
+    Bog‘lanish
+  </Button>
+</Link>
             </div>
           </div>
 

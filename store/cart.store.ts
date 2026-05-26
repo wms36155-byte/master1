@@ -1,5 +1,4 @@
 import { create } from "zustand";
-
 import { Equipment } from "@/types/equipment.types";
 
 type CartItem = Equipment & {
@@ -10,13 +9,9 @@ type CartStore = {
   items: CartItem[];
 
   addToCart: (equipment: Equipment) => void;
-
-  removeFromCart: (id: number) => void;
-
-  increaseQuantity: (id: number) => void;
-
-  decreaseQuantity: (id: number) => void;
-
+  removeFromCart: (id: string) => void;
+  increaseQuantity: (id: string) => void;
+  decreaseQuantity: (id: string) => void;
   clearCart: () => void;
 };
 
@@ -33,52 +28,37 @@ export const useCartStore = create<CartStore>((set) => ({
         return {
           items: state.items.map((item) =>
             item.id === equipment.id
-              ? {
-                  ...item,
-                  quantity: item.quantity + 1,
-                }
+              ? { ...item, quantity: item.quantity + 1 }
               : item
           ),
         };
       }
 
       return {
-        items: [
-          ...state.items,
-          {
-            ...equipment,
-            quantity: 1,
-          },
-        ],
+        items: [...state.items, { ...equipment, quantity: 1 }],
       };
     }),
 
-  removeFromCart: (id) =>
+  removeFromCart: (id: string) =>
     set((state) => ({
       items: state.items.filter((item) => item.id !== id),
     })),
 
-  increaseQuantity: (id) =>
+  increaseQuantity: (id: string) =>
     set((state) => ({
       items: state.items.map((item) =>
         item.id === id
-          ? {
-              ...item,
-              quantity: item.quantity + 1,
-            }
+          ? { ...item, quantity: item.quantity + 1 }
           : item
       ),
     })),
 
-  decreaseQuantity: (id) =>
+  decreaseQuantity: (id: string) =>
     set((state) => ({
       items: state.items
         .map((item) =>
           item.id === id
-            ? {
-                ...item,
-                quantity: item.quantity - 1,
-              }
+            ? { ...item, quantity: item.quantity - 1 }
             : item
         )
         .filter((item) => item.quantity > 0),

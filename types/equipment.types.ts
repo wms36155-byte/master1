@@ -1,9 +1,8 @@
 export type Equipment = {
-  id: number;
-
+  id: string;
   name: string;
   category: string;
-  image: string;
+  image?: string;
 
   pricePerHour: number;
   pricePerDay: number;
@@ -11,15 +10,13 @@ export type Equipment = {
 
   operatorAvailable: boolean;
 
-  operatorId?: number;
-
   location: string;
-
-  rating: number; // ✅ kerakli field (DOIM NUMBER BO'LISHI KERAK)
-
+  rating: number;
   description: string;
-};
 
+  // ✅ FIX
+  operatorId?: number;
+};
 export type CreateEquipmentDto = {
   name: string;
   category: string;

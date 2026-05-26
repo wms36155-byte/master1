@@ -1,66 +1,58 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {
-  Pencil,
-  Trash2,
-  Plus,
-} from "lucide-react";
-
+import { Pencil, Trash2, Plus } from "lucide-react";
 import toast from "react-hot-toast";
+
 import CreateEquipmentModal from "./CreateEquipmentModal";
-import type { Equipment } from "@/types/equipment.types";
 import EditEquipmentModal from "./EditEquipmentModal";
+
+import type { Equipment } from "@/types/equipment.types";
+
 import {
   getEquipments,
   deleteEquipment,
 } from "@/services/equipment.service";
 
 export default function EquipmentTable() {
-  const [equipments, setEquipments] = useState<
-    Equipment[]
-  >([]);
-
+  const [equipments, setEquipments] = useState<Equipment[]>([]);
   const [loading, setLoading] = useState(true);
 
   const [open, setOpen] = useState(false);
 
-const [selectedEquipment, setSelectedEquipment] =
-  useState<Equipment | null>(null);
+  const [selectedEquipment, setSelectedEquipment] =
+    useState<Equipment | null>(null);
 
-const [editOpen, setEditOpen] =
-  useState(false);
-  // FETCH
+  const [editOpen, setEditOpen] = useState(false);
+
+  // =========================
+  // FETCH DATA
+  // =========================
   const fetchData = async () => {
     try {
-      const data = await getEquipments();
+      setLoading(true);
 
+      const data = await getEquipments();
       setEquipments(data);
     } catch (error) {
-      toast.error(
-        "Ma’lumotlarni olishda xatolik"
-      );
+      toast.error("Ma’lumotlarni olishda xatolik");
     } finally {
       setLoading(false);
     }
   };
 
+  // =========================
   // DELETE
-  const handleDelete = async (
-    id: number
-  ) => {
+  // =========================
+  const handleDelete = async (id: string) => {
     try {
       await deleteEquipment(id);
 
-      toast.success(
-        "Texnika o‘chirildi"
-      );
+      toast.success("Texnika o‘chirildi");
 
       fetchData();
     } catch (error) {
-      toast.error(
-        "O‘chirishda xatolik"
-      );
+      toast.error("O‘chirishda xatolik");
     }
   };
 
@@ -68,148 +60,101 @@ const [editOpen, setEditOpen] =
     fetchData();
   }, []);
 
-  if (loading) {
-    return (
-      <div className="bg-[#102E1C] rounded-3xl p-10 mt-10">
-        <h1>Loading...</h1>
-      </div>
-    );
-  }
-
   return (
     <>
       {/* HEADER */}
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-3xl font-black">
-          Texnikalar
-        </h2>
+        <h2 className="text-3xl font-black">Texnikalar</h2>
 
         <button
           onClick={() => setOpen(true)}
           className="bg-green-500 hover:bg-green-600 transition-all px-5 py-3 rounded-2xl flex items-center gap-2"
         >
           <Plus size={18} />
-
           Qo‘shish
         </button>
       </div>
 
-      {/* TABLE */}
-      <div className="bg-[#102E1C] border border-white/10 rounded-3xl overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="border-b border-white/10">
-              <tr>
-                <th className="text-left p-5">
-                  Texnika
-                </th>
+      {/* EMPTY STATE */}
+      {equipments.length === 0 ? (
+        <div className="bg-[#102E1C] border border-white/10 rounded-3xl p-10 text-center text-white/50">
+          Texnikalar mavjud emas
+        </div>
+      ) : (
+        <div className="bg-[#102E1C] border border-white/10 rounded-3xl overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="border-b border-white/10">
+                <tr>
+                  <th className="text-left p-5">Texnika</th>
+                  <th className="text-left p-5">Kategoriya</th>
+                  <th className="text-left p-5">Narx</th>
+                  <th className="text-left p-5">Reyting</th>
+                  <th className="text-left p-5">Action</th>
+                </tr>
+              </thead>
 
-                <th className="text-left p-5">
-                  Kategoriya
-                </th>
-
-                <th className="text-left p-5">
-                  Narx
-                </th>
-
-                <th className="text-left p-5">
-                  Reyting
-                </th>
-
-                <th className="text-left p-5">
-                  Action
-                </th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {equipments.map(
-                (equipment) => (
+              <tbody>
+                {equipments.map((equipment) => (
                   <tr
                     key={equipment.id}
                     className="border-b border-white/5 hover:bg-white/5 transition-colors"
                   >
-                    <td className="p-5 font-bold">
-                      {equipment.name}
-                    </td>
+                    <td className="p-5 font-bold">{equipment.name}</td>
 
                     <td className="p-5 text-white/60">
                       {equipment.category}
                     </td>
 
                     <td className="p-5 text-green-400 font-semibold">
-                      {equipment.pricePerDay.toLocaleString()}{" "}
-                      so‘m
+                      {equipment.pricePerDay.toLocaleString()} so‘m
                     </td>
 
-                    <td className="p-5">
-                      ⭐ {equipment.rating}
-                    </td>
+                    <td className="p-5">⭐ {equipment.rating}</td>
 
                     <td className="p-5">
                       <div className="flex items-center gap-3">
                         {/* EDIT */}
                         <button
-  onClick={() => {
-    setSelectedEquipment(
-      equipment
-    );
-
-    setEditOpen(true);
-  }}
-  className="w-10 h-10 rounded-xl bg-blue-500/20 hover:bg-blue-500/30 transition-all flex items-center justify-center"
->
-  <Pencil
-    size={18}
-    className="text-blue-400"
-  />
-</button>
+                          onClick={() => {
+                            setSelectedEquipment(equipment);
+                            setEditOpen(true);
+                          }}
+                          className="w-10 h-10 rounded-xl bg-blue-500/20 hover:bg-blue-500/30 flex items-center justify-center"
+                        >
+                          <Pencil size={18} className="text-blue-400" />
+                        </button>
 
                         {/* DELETE */}
                         <button
-                          onClick={() =>
-                            handleDelete(
-                              equipment.id
-                            )
-                          }
-                          className="w-10 h-10 rounded-xl bg-red-500/20 hover:bg-red-500/30 transition-all flex items-center justify-center"
+                          onClick={() => handleDelete(equipment.id)}
+                          className="w-10 h-10 rounded-xl bg-red-500/20 hover:bg-red-500/30 flex items-center justify-center"
                         >
-                          <Trash2
-                            size={18}
-                            className="text-red-400"
-                          />
+                          <Trash2 size={18} className="text-red-400" />
                         </button>
                       </div>
                     </td>
                   </tr>
-                )
-              )}
-            </tbody>
-          </table>
-
-          {equipments.length === 0 && (
-            <div className="p-10 text-center text-white/50">
-              Texnikalar mavjud emas
-            </div>
-          )}
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>
+      )}
 
-      {/* MODAL */}
+      {/* MODALS */}
       <EditEquipmentModal
-  isOpen={editOpen}
-  onClose={() =>
-    setEditOpen(false)
-  }
-  equipment={selectedEquipment}
-  refetch={fetchData}
-/>
+        isOpen={editOpen}
+        onClose={() => setEditOpen(false)}
+        equipment={selectedEquipment}
+        refetch={fetchData}
+      />
+
       <CreateEquipmentModal
         isOpen={open}
         onClose={() => setOpen(false)}
         refetch={fetchData}
       />
     </>
-    
   );
 }
