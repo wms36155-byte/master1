@@ -1,9 +1,7 @@
 "use client";
 
 import { useState } from "react";
-
 import toast from "react-hot-toast";
-
 import Button from "../ui/Button";
 
 import {
@@ -157,7 +155,7 @@ export default function BookingModal({
 
             <h2 className="text-4xl font-black text-green-400 mt-2">
               {totalPrice.toLocaleString()}{" "}
-              so‘m
+              sum
             </h2>
           </div>
 
