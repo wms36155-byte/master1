@@ -1,5 +1,8 @@
+// types/equipment.types.ts
+
 export type Equipment = {
   id: string;
+
   name: string;
   category: string;
   image?: string;
@@ -14,23 +17,10 @@ export type Equipment = {
   rating: number;
   description: string;
 
-  // ✅ FIX
-  operatorId?: number;
+  operatorId?: number | null;
 };
-export type CreateEquipmentDto = {
-  name: string;
-  category: string;
-  image: string;
 
-  pricePerHour: number;
-  pricePerDay: number;
-  pricePerMonth: number;
-
-  operatorAvailable: boolean;
-
-  location: string;
-
-  rating: number; // ✅ BU SHART (sen ishlatyapsan formda)
-
-  description: string;
-};
+export type CreateEquipmentDto = Omit<
+  Equipment,
+  "id" | "operatorId"
+>;

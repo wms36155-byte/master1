@@ -1,18 +1,13 @@
 "use client";
 
-import Link from "next/link";
+import Image from "next/image";
 import toast from "react-hot-toast";
 
-import {
-  Heart,
-  MapPin,
-  Star,
-} from "lucide-react";
+import { MapPin, Star, Heart, ShoppingCart } from "lucide-react";
 
 import Button from "../ui/Button";
 
 import { Equipment } from "@/types/equipment.types";
-
 import { useCartStore } from "@/store/cart.store";
 import { useFavoriteStore } from "@/store/favorite.store";
 
@@ -20,31 +15,21 @@ type Props = {
   equipment: Equipment;
 };
 
-export default function EquipmentCard({
-  equipment,
-}: Props) {
-  const addToCart = useCartStore(
-    (state) => state.addToCart
+export default function EquipmentCard({ equipment }: Props) {
+  const addToCart = useCartStore((s) => s.addToCart);
+
+  const toggleFavorite = useFavoriteStore((s) => s.toggleFavorite);
+
+  const isFavorite = useFavoriteStore((s) =>
+    s.isFavorite(equipment.id)
   );
 
-  const toggleFavorite =
-    useFavoriteStore(
-      (state) =>
-        state.toggleFavorite
-    );
+  const handleAddToCart = () => {
+    addToCart(equipment);
+    toast.success("Savatchaga qo‘shildi 🛒");
+  };
 
-  const isFavorite =
-    useFavoriteStore((state) =>
-      state.isFavorite(
-        String(equipment.id)
-      )
-    );
-
-  const handleFavorite = (
-    e: React.MouseEvent
-  ) => {
-    e.preventDefault();
-
+  const handleFavorite = () => {
     toggleFavorite(equipment);
 
     toast.success(
@@ -55,109 +40,115 @@ export default function EquipmentCard({
   };
 
   return (
-    <div className="bg-[#102E1C] rounded-3xl overflow-hidden border border-white/10">
+    <div className="group bg-[#0f2a1b] border border-white/10 rounded-3xl overflow-hidden hover:scale-[1.02] transition shadow-xl shadow-black/30">
 
       {/* IMAGE */}
-      <div className="relative">
+      <div className="relative h-60 overflow-hidden">
+
+        <Image
+          src={equipment.image || "/placeholder.jpg"}
+          alt={equipment.name}
+          fill
+          className="object-cover group-hover:scale-110 transition duration-500"
+        />
 
         {/* FAVORITE */}
         <button
           onClick={handleFavorite}
-          className="absolute top-4 right-4 z-10 bg-black/50 w-11 h-11 rounded-full flex items-center justify-center"
+          className="absolute top-3 right-3 w-10 h-10 rounded-full bg-black/50 backdrop-blur-md flex items-center justify-center"
         >
           <Heart
-            size={20}
+            size={18}
             className={
               isFavorite
-                ? "fill-red-500 text-red-500"
+                ? "text-red-500 fill-red-500"
                 : "text-white"
             }
           />
         </button>
 
-        <img
-          src={
-            equipment.image ||
-            "/placeholder.jpg"
-          }
-          alt={equipment.name}
-          className="w-full h-60 object-cover"
-        />
-
+        {/* PRICE BADGE */}
+        <div className="absolute bottom-3 left-3 bg-black/60 backdrop-blur-md px-3 py-1 rounded-xl">
+          <span className="text-green-400 text-sm font-bold">
+            {equipment.pricePerHour.toLocaleString()} so‘m / soat
+          </span>
+        </div>
       </div>
 
       {/* CONTENT */}
-      <div className="p-5">
+      <div className="p-5 space-y-4">
 
-        <div className="flex items-start justify-between">
+        {/* TITLE */}
+        <div>
+          <h2 className="text-xl font-bold">
+            {equipment.name}
+          </h2>
 
-          <div>
-            <h2 className="text-2xl font-bold">
-              {equipment.name}
-            </h2>
+          <p className="text-white/40 text-sm">
+            {equipment.category}
+          </p>
+        </div>
 
-            <div className="flex items-center gap-2 text-white/60 mt-2">
-              <MapPin size={16} />
-              <span>
-                {equipment.location}
-              </span>
-            </div>
+        {/* LOCATION + RATING */}
+        <div className="flex justify-between text-sm">
+
+          <div className="flex items-center gap-2 text-white/60">
+            <MapPin size={14} />
+            {equipment.location}
           </div>
 
           <div className="flex items-center gap-1 text-yellow-400">
-            <Star
-              size={16}
-              fill="currentColor"
-            />
-
-            <span>
+            <Star size={14} fill="currentColor" />
+            <span className="text-white">
               {equipment.rating}
             </span>
           </div>
-
         </div>
 
-        {/* PRICE */}
-        <div className="mt-6">
-          <p className="text-white/50 text-sm">
-            Boshlang‘ich narx
-          </p>
+        {/* PRICES */}
+        <div className="grid grid-cols-2 text-xs text-white/50 gap-2">
+          <div>
+            Kun:{" "}
+            <span className="text-white">
+              {equipment.pricePerDay.toLocaleString()}
+            </span>
+          </div>
 
-          <h1 className="text-3xl font-black text-green-400">
-            {Number(
-              equipment.pricePerHour
-            ).toLocaleString()}{" "}
-            so‘m
-          </h1>
+          <div>
+            Oy:{" "}
+            <span className="text-white">
+              {equipment.pricePerMonth.toLocaleString()}
+            </span>
+          </div>
         </div>
 
-        {/* BUTTONS */}
-        <div className="flex gap-3 mt-6">
+        {/* DESCRIPTION */}
+        <p className="text-white/40 text-sm line-clamp-2">
+          {equipment.description}
+        </p>
 
-          {/* DETAIL PAGE */}
-          <Link
-            href={`/equipment/${equipment.id}`}
-            className="flex-1"
-          >
-            <Button className="w-full">
-              Batafsil
-            </Button>
-          </Link>
-
-          <Button
-            className="px-5 bg-white/10"
-            onClick={() => {
-              addToCart(equipment);
-
-              toast.success(
-                "Savatchaga qo‘shildi"
-              );
-            }}
-          >
-            +
-          </Button>
-
+        {/* OPERATOR */}
+        <div className="text-xs">
+          {equipment.operatorAvailable ? (
+            <span className="text-green-400">
+              ✔ Operator mavjud
+            </span>
+          ) : (
+            <span className="text-white/40">
+              Operator yo‘q
+            </span>
+          )}
         </div>
+
+        {/* ACTIONS */}
+        <Button
+          onClick={handleAddToCart}
+          className="w-full flex items-center justify-center gap-2"
+        >
+          <ShoppingCart size={18} />
+          Savatchaga qo‘shish
+        </Button>
+
       </div>
     </div>
   );

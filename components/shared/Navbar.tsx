@@ -9,7 +9,7 @@ import { useCartStore } from "@/store/cart.store";
 const navLinks = [
   { name: "Bosh sahifa", href: "/" },
   { name: "Texnikalar", href: "/equipment" },
-  { name: "Dashboard", href: "/dashboard" },
+
 ];
 
 export default function Navbar() {

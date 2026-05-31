@@ -1,131 +1,34 @@
 import api from "@/lib/axios";
+import { Equipment } from "@/types/equipment.types";
 
-import type {
-  Equipment,
-  CreateEquipmentDto,
-} from "@/types/equipment.types";
-
-// =========================
-// GET ALL EQUIPMENTS
-// =========================
-export const getEquipments = async (): Promise<
-  Equipment[]
-> => {
-  try {
-    const response =
-      await api.get<Equipment[]>(
-        "/equipments"
-      );
-
-    return response.data;
-  } catch (error) {
-    console.error(
-      "Get equipments error:",
-      error
-    );
-
-    return [];
-  }
+// GET ALL
+export const getEquipments = async (): Promise<Equipment[]> => {
+  const { data } = await api.get("/equipments");
+  return data;
 };
 
-// =========================
-// GET EQUIPMENT BY ID
-// =========================
-export const getEquipmentById =
-  async (
-    id: string
-  ): Promise<Equipment | null> => {
-    try {
-      if (!id) {
-        return null;
-      }
+// ✅ GET BY ID (SENDA YO‘Q EDI)
+export const getEquipmentById = async (
+  id: string
+): Promise<Equipment> => {
+  const { data } = await api.get(`/equipments/${id}`);
+  return data;
+};
 
-      const response =
-        await api.get<Equipment>(
-          `/equipments/${id}`
-        );
+// CREATE
+export const createEquipment = async (payload: any) => {
+  const { data } = await api.post("/equipments", payload);
+  return data;
+};
 
-      return response.data;
-    } catch (error) {
-      console.error(
-        "Get equipment error:",
-        error
-      );
+// UPDATE
+export const updateEquipment = async (id: string, payload: any) => {
+  const { data } = await api.patch(`/equipments/${id}`, payload);
+  return data;
+};
 
-      return null;
-    }
-  };
-
-// =========================
-// CREATE EQUIPMENT
-// =========================
-export const createEquipment =
-  async (
-    payload: CreateEquipmentDto
-  ): Promise<Equipment | null> => {
-    try {
-      const response =
-        await api.post<Equipment>(
-          "/equipments",
-          payload
-        );
-
-      return response.data;
-    } catch (error) {
-      console.error(
-        "Create equipment error:",
-        error
-      );
-
-      return null;
-    }
-  };
-
-// =========================
-// UPDATE EQUIPMENT
-// =========================
-export const updateEquipment =
-  async (
-    id: string,
-    payload: Partial<CreateEquipmentDto>
-  ): Promise<Equipment | null> => {
-    try {
-      const response =
-        await api.patch<Equipment>(
-          `/equipments/${id}`,
-          payload
-        );
-
-      return response.data;
-    } catch (error) {
-      console.error(
-        "Update equipment error:",
-        error
-      );
-
-      return null;
-    }
-  };
-
-// =========================
-// DELETE EQUIPMENT
-// =========================
-export const deleteEquipment =
-  async (
-    id: string
-  ): Promise<boolean> => {
-    try {
-      await api.delete(
-        `/equipments/${id}`
-      );
-
-      return true;
-    } catch (error) {
-      console.error(
-        "Delete equipment error:",
-        error
-      );
-
-      return false;
-    }
-  };
+// DELETE
+export const deleteEquipment = async (id: string) => {
+  const { data } = await api.delete(`/equipments/${id}`);
+  return data;
+};

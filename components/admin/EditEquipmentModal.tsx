@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -6,10 +7,15 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
 import Button from "../ui/Button";
-import ImageUpload from "../ui/ImageUpload";
 
-import { Equipment, CreateEquipmentDto } from "@/types/equipment.types";
-import { updateEquipment } from "@/services/equipment.service";
+import {
+  Equipment,
+  CreateEquipmentDto,
+} from "@/types/equipment.types";
+
+import {
+  updateEquipment,
+} from "@/services/equipment.service";
 
 type Props = {
   isOpen: boolean;
@@ -31,174 +37,254 @@ export default function EditEquipmentModal({
     formState: { isSubmitting },
   } = useForm<CreateEquipmentDto>();
 
-  const [imageUrl, setImageUrl] = useState("");
+  const [imageUrl, setImageUrl] =
+    useState("");
 
   useEffect(() => {
     if (!equipment) return;
 
-    setImageUrl(equipment.image || "");
+    setImageUrl(
+      equipment.image || ""
+    );
 
     reset({
-      name: equipment.name || "",
-      category: equipment.category || "",
-      pricePerHour: equipment.pricePerHour || 0,
-      pricePerDay: equipment.pricePerDay || 0,
-      pricePerMonth: equipment.pricePerMonth || 0,
-      location: equipment.location || "",
-      rating: equipment.rating || 0,
-      description: equipment.description || "",
-      operatorAvailable: equipment.operatorAvailable || false,
+      name: equipment.name,
+      category: equipment.category,
+      image: equipment.image || "",
+      pricePerHour:
+        equipment.pricePerHour,
+      pricePerDay:
+        equipment.pricePerDay,
+      pricePerMonth:
+        equipment.pricePerMonth,
+      operatorAvailable:
+        equipment.operatorAvailable,
+      location: equipment.location,
+      rating: equipment.rating,
+      description:
+        equipment.description,
     });
   }, [equipment, reset]);
 
-  if (!isOpen || !equipment) return null;
+  if (!isOpen || !equipment)
+    return null;
 
-  const onSubmit = async (data: CreateEquipmentDto) => {
+  const onSubmit = async (
+    data: CreateEquipmentDto
+  ) => {
     try {
-      await updateEquipment(equipment.id, {
-        ...data,
-        image: imageUrl,
-        pricePerHour: Number(data.pricePerHour),
-        pricePerDay: Number(data.pricePerDay),
-        pricePerMonth: Number(data.pricePerMonth),
-        rating: Number(data.rating),
-      });
+      const updated =
+        await updateEquipment(
+          equipment.id,
+          {
+            ...data,
+            image: imageUrl,
+            pricePerHour:
+              Number(
+                data.pricePerHour
+              ) || 0,
+            pricePerDay:
+              Number(
+                data.pricePerDay
+              ) || 0,
+            pricePerMonth:
+              Number(
+                data.pricePerMonth
+              ) || 0,
+            rating:
+              Number(
+                data.rating
+              ) || 5,
+          }
+        );
 
-      toast.success("Texnika yangilandi");
+      if (!updated) {
+        toast.error(
+          "Yangilashda xatolik"
+        );
+        return;
+      }
+
+      toast.success(
+        "Texnika yangilandi 🚜"
+      );
+
       refetch();
       onClose();
-    } catch (err) {
-      console.log(err);
-      toast.error("Xatolik yuz berdi");
+    } catch (error) {
+      console.error(error);
+      toast.error(
+        "Xatolik yuz berdi"
+      );
     }
   };
 
   return (
-    <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/70 backdrop-blur-md p-3">
-
-      {/* MODAL */}
-      <div className="w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-2xl bg-[#0f2a1b] border border-white/10 shadow-2xl">
+    <div className="fixed inset-0 z-[200] bg-black/70 backdrop-blur-md flex items-center justify-center p-4">
+      <div className="w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-3xl bg-[#102E1C] border border-white/10 p-6">
 
         {/* HEADER */}
-        <div className="flex items-center justify-between px-5 py-4 border-b border-white/10">
+        <div className="flex items-center justify-between mb-6">
           <div>
-            <h2 className="text-lg font-bold">
+            <h2 className="text-3xl font-black">
               ✏️ Texnikani tahrirlash
             </h2>
-            <p className="text-white/40 text-xs">
-              Ma’lumotlarni yangilang
+
+            <p className="text-white/40 mt-1">
+              Texnika ma'lumotlarini yangilang
             </p>
           </div>
 
           <button
             onClick={onClose}
-            className="w-8 h-8 flex items-center justify-center rounded-lg bg-white/5 hover:bg-white/10 transition"
+            className="w-10 h-10 rounded-xl bg-white/10 hover:bg-white/20 flex items-center justify-center"
           >
-            <X size={18} />
+            <X size={20} />
           </button>
         </div>
 
         {/* FORM */}
         <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="grid grid-cols-1 gap-4 p-5"
+          onSubmit={handleSubmit(
+            onSubmit
+          )}
+          className="grid md:grid-cols-2 gap-5"
         >
-
-          {/* NAME + CATEGORY */}
-          <div className="grid grid-cols-2 gap-3">
-            <input
-              {...register("name")}
-              className="input text-sm h-10"
-              placeholder="Nomi"
-            />
-
-            <input
-              {...register("category")}
-              className="input text-sm h-10"
-              placeholder="Kategoriya"
-            />
-          </div>
-
-          {/* IMAGE */}
-          <div>
-            <ImageUpload value={imageUrl} onChange={setImageUrl} />
-          </div>
-
-          {/* PRICES */}
-          <div className="grid grid-cols-3 gap-2">
-            <input
-              type="number"
-              {...register("pricePerHour", { valueAsNumber: true })}
-              className="input text-sm h-10"
-              placeholder="Soat"
-            />
-
-            <input
-              type="number"
-              {...register("pricePerDay", { valueAsNumber: true })}
-              className="input text-sm h-10"
-              placeholder="Kun"
-            />
-
-            <input
-              type="number"
-              {...register("pricePerMonth", { valueAsNumber: true })}
-              className="input text-sm h-10"
-              placeholder="Oy"
-            />
-          </div>
-
-          {/* LOCATION + RATING */}
-          <div className="grid grid-cols-2 gap-3">
-            <input
-              {...register("location")}
-              className="input text-sm h-10"
-              placeholder="Joylashuv"
-            />
-
-            <input
-              type="number"
-              step="0.1"
-              {...register("rating", { valueAsNumber: true })}
-              className="input text-sm h-10"
-              placeholder="⭐"
-            />
-          </div>
-
-          {/* DESCRIPTION */}
-          <textarea
-            {...register("description")}
-            className="input text-sm h-20 resize-none"
-            placeholder="Tavsif..."
+          <input
+            {...register("name")}
+            placeholder="Nomi"
+            className="input"
           />
 
-          {/* CHECKBOX */}
-          <label className="flex items-center gap-2 text-sm text-white/80">
-            <input type="checkbox" {...register("operatorAvailable")} />
-            Operator mavjud
+          <input
+            {...register("category")}
+            placeholder="Kategoriya"
+            className="input"
+          />
+
+          {/* IMAGE URL */}
+          <div className="md:col-span-2 space-y-3">
+            <input
+              type="url"
+              value={imageUrl}
+              onChange={(e) =>
+                setImageUrl(
+                  e.target.value
+                )
+              }
+              placeholder="Rasm URL"
+              className="input w-full"
+            />
+
+            {imageUrl && (
+              <img
+                src={imageUrl}
+                alt="Preview"
+                className="w-full h-60 object-cover rounded-2xl border border-white/10"
+              />
+            )}
+          </div>
+
+          <input
+            type="number"
+            placeholder="Soatlik narx"
+            {...register(
+              "pricePerHour",
+              {
+                valueAsNumber: true,
+              }
+            )}
+            className="input"
+          />
+
+          <input
+            type="number"
+            placeholder="Kunlik narx"
+            {...register(
+              "pricePerDay",
+              {
+                valueAsNumber: true,
+              }
+            )}
+            className="input"
+          />
+
+          <input
+            type="number"
+            placeholder="Oylik narx"
+            {...register(
+              "pricePerMonth",
+              {
+                valueAsNumber: true,
+              }
+            )}
+            className="input"
+          />
+
+          <input
+            {...register("location")}
+            placeholder="Joylashuv"
+            className="input"
+          />
+
+          <input
+            type="number"
+            step="0.1"
+            placeholder="Rating"
+            {...register(
+              "rating",
+              {
+                valueAsNumber: true,
+              }
+            )}
+            className="input"
+          />
+
+          <textarea
+            {...register(
+              "description"
+            )}
+            placeholder="Tavsif"
+            className="input md:col-span-2 h-32"
+          />
+
+          <label className="flex items-center gap-3 md:col-span-2">
+            <input
+              type="checkbox"
+              {...register(
+                "operatorAvailable"
+              )}
+            />
+
+            <span>
+              Operator mavjud
+            </span>
           </label>
 
-          {/* ACTION */}
-          <div className="flex gap-2 pt-1">
+          <div className="md:col-span-2 flex gap-4">
             <Button
               type="button"
               onClick={onClose}
-              className="w-1/2 bg-white/10 hover:bg-white/20 text-sm py-2"
+              className="flex-1 bg-gray-600 hover:bg-gray-700"
             >
-              Bekor
+              Bekor qilish
             </Button>
 
             <Button
               type="submit"
-              className="w-1/2 text-sm py-2"
-              disabled={isSubmitting}
+              disabled={
+                isSubmitting
+              }
+              className="flex-1"
             >
-              {isSubmitting ? "Saqlanmoqda..." : "Saqlash"}
+              {isSubmitting
+                ? "Saqlanmoqda..."
+                : "Saqlash"}
             </Button>
           </div>
-
         </form>
       </div>
     </div>
   );
 }
+

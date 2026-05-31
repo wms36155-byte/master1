@@ -2,7 +2,7 @@
   "equipments": [
     {
       "id": "1",
-      "name": "CAT 320D",
+      "name": "CAT 320Da",
       "category": "Ekskavator",
       "image": "https://images.unsplash.com/photo-1599707254554-027aeb4deacd?q=80&w=1200&auto=format&fit=crop",
       "pricePerHour": 450000,
@@ -22,13 +22,12 @@
       "pricePerMonth": 89,
       "location": "tuxumcha",
       "rating": 44,
-      "description": "",
+      "description": "hii",
       "operatorAvailable": true,
-      "image": ""
+      "image": "https://thfvnext.bing.com/th/id/OIP.7_JEcmBcNMHsPMFm_1FUKwHaEz?w=275&h=180&c=7&r=0&o=7&cb=thfvnextfalcon&dpr=1.4&pid=1.7&rm=3"
     },
     {
-      "id": "c081",
-      "name": "Amira",
+      "name": "P 340M",
       "category": "Pogruzchik",
       "pricePerHour": 788,
       "pricePerDay": 5678,
@@ -37,7 +36,8 @@
       "rating": 49,
       "description": "",
       "operatorAvailable": true,
-      "image": ""
+      "image": "https://tse4.mm.bing.net/th/id/OIP.nVk-se7HJ9iWPpgKrErl-AHaE8?rs=1&pid=ImgDetMain&o=7&rm=3",
+      "id": "zJCCF3Jqz7s"
     }
   ],
   "bookings": [
@@ -63,16 +63,6 @@
     },
     {
       "equipmentName": "CAT 320D",
-      "customerName": "Customer",
-      "phone": "+998900000000",
-      "days": 5,
-      "totalPrice": 25000000,
-      "withOperator": false,
-      "createdAt": "2026-05-22T13:53:42.180Z",
-      "id": "qd85AVFH-NI"
-    },
-    {
-      "equipmentName": "CAT 320D",
       "customerName": "Amira",
       "phone": "994020039",
       "days": 1,
@@ -80,6 +70,16 @@
       "withOperator": true,
       "createdAt": "2026-05-23T05:48:00.362Z",
       "id": "Kp1ZuYIwUAg"
+    },
+    {
+      "equipmentName": "Cart (1 items)",
+      "customerName": "Amira",
+      "phone": "+998944736300",
+      "days": 1,
+      "totalPrice": 5500000,
+      "withOperator": true,
+      "createdAt": "2026-05-31T06:58:41.078Z",
+      "id": "7MrzNhxCRe8"
     }
   ],
   "users": [
@@ -94,26 +94,19 @@
   "operators": [
     {
       "id": "1",
-      "name": "Ali",
-      "phone": "123",
+      "name": "Ali Aliyev",
+      "phone": "+998 50 037 13 86",
       "experience": 2,
       "location": "Tashkent",
       "available": true
     },
     {
-      "id": "de45",
-      "name": "Client",
-      "phone": "+998 50 037 13 86",
-      "experience": 4,
-      "location": "bukhra"
-    },
-    {
-      "id": "8b59",
-      "name": "Client",
-      "phone": "+998 50 037 13 86",
-      "experience": 4,
-      "location": "samarqand",
-      "available": true
+      "name": "Abror",
+      "phone": "+998944736300",
+      "experience": 9,
+      "location": "Chilonzor",
+      "available": true,
+      "id": "Nl93ch4b0A4"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

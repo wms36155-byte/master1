@@ -1,21 +1,20 @@
 "use client";
 
 import { useState } from "react";
-import toast from "react-hot-toast";
 import Button from "../ui/Button";
-
-import {
-  createBooking,
-} from "@/services/booking.service";
 
 type Props = {
   isOpen: boolean;
-
   onClose: () => void;
-
   equipmentName: string;
-
   pricePerDay: number;
+
+  onSubmit: (data: {
+    customerName: string;
+    phone: string;
+    days: number;
+    withOperator: boolean;
+  }) => void;
 };
 
 export default function BookingModal({
@@ -23,151 +22,72 @@ export default function BookingModal({
   onClose,
   equipmentName,
   pricePerDay,
+  onSubmit,
 }: Props) {
-  const [customerName, setCustomerName] =
-    useState("");
-
-  const [phone, setPhone] =
-    useState("");
-
-  const [days, setDays] =
-    useState(1);
-
-  const [withOperator, setWithOperator] =
-    useState(false);
-
-  const [loading, setLoading] =
-    useState(false);
+  const [customerName, setCustomerName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [days, setDays] = useState(1);
+  const [withOperator, setWithOperator] = useState(false);
 
   if (!isOpen) return null;
 
-  const totalPrice =
-    days * pricePerDay +
-    (withOperator ? 500000 : 0);
+  const totalPrice = days * pricePerDay + (withOperator ? 500000 : 0);
 
-  const handleBooking =
-    async () => {
-      try {
-        setLoading(true);
+  const handleSubmit = () => {
+    if (!customerName || !phone) return;
 
-        await createBooking({
-          equipmentName,
-
-          customerName,
-
-          phone,
-
-          days,
-
-          totalPrice,
-
-          withOperator,
-
-          createdAt:
-            new Date().toISOString(),
-        });
-
-        toast.success(
-          "Buyurtma yuborildi"
-        );
-
-        onClose();
-      } catch (error) {
-        toast.error(
-          "Xatolik yuz berdi"
-        );
-      } finally {
-        setLoading(false);
-      }
-    };
+    onSubmit({
+      customerName,
+      phone,
+      days,
+      withOperator,
+    });
+  };
 
   return (
-    <div className="fixed inset-0 z-[300] bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
-      <div className="w-full max-w-xl bg-[#102E1C] border border-white/10 rounded-3xl p-8">
-        <div className="flex items-center justify-between mb-8">
-          <h2 className="text-3xl font-black">
-            Buyurtma berish
-          </h2>
+    <div className="fixed inset-0 z-[300] bg-black/80 flex items-center justify-center p-4">
+      <div className="bg-[#102E1C] p-8 rounded-3xl w-full max-w-xl">
+        <h2 className="text-3xl font-black mb-6">
+          Buyurtma: {equipmentName}
+        </h2>
 
-          <button
-            onClick={onClose}
-            className="text-3xl"
-          >
-            ×
-          </button>
+        <input
+          className="input w-full mb-4"
+          placeholder="Ism"
+          value={customerName}
+          onChange={(e) => setCustomerName(e.target.value)}
+        />
+
+        <input
+          className="input w-full mb-4"
+          placeholder="Telefon"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+        />
+
+        <input
+          type="number"
+          className="input w-full mb-4"
+          value={days}
+          onChange={(e) => setDays(Number(e.target.value))}
+        />
+
+        <label className="flex items-center gap-2 mb-4">
+          <input
+            type="checkbox"
+            checked={withOperator}
+            onChange={(e) => setWithOperator(e.target.checked)}
+          />
+          Operator bilan
+        </label>
+
+        <div className="text-green-400 font-black text-2xl mb-6">
+          {totalPrice.toLocaleString()} so‘m
         </div>
 
-        <div className="space-y-5">
-          <input
-            type="text"
-            placeholder="Ismingiz"
-            value={customerName}
-            onChange={(e) =>
-              setCustomerName(
-                e.target.value
-              )
-            }
-            className="w-full bg-black/20 border border-white/10 rounded-2xl px-5 py-4 outline-none"
-          />
-
-          <input
-            type="text"
-            placeholder="Telefon raqam"
-            value={phone}
-            onChange={(e) =>
-              setPhone(e.target.value)
-            }
-            className="w-full bg-black/20 border border-white/10 rounded-2xl px-5 py-4 outline-none"
-          />
-
-          <input
-            type="number"
-            placeholder="Kun soni"
-            value={days}
-            onChange={(e) =>
-              setDays(
-                Number(e.target.value)
-              )
-            }
-            className="w-full bg-black/20 border border-white/10 rounded-2xl px-5 py-4 outline-none"
-          />
-
-          <label className="flex items-center gap-3">
-            <input
-              type="checkbox"
-              checked={withOperator}
-              onChange={(e) =>
-                setWithOperator(
-                  e.target.checked
-                )
-              }
-            />
-
-            <span>
-              Operator bilan
-            </span>
-          </label>
-
-          <div className="bg-black/20 rounded-2xl p-5">
-            <p className="text-white/50">
-              Jami narx
-            </p>
-
-            <h2 className="text-4xl font-black text-green-400 mt-2">
-              {totalPrice.toLocaleString()}{" "}
-              sum
-            </h2>
-          </div>
-
-          <Button
-            onClick={handleBooking}
-            className="w-full"
-          >
-            {loading
-              ? "Loading..."
-              : "Buyurtma berish"}
-          </Button>
-        </div>
+        <Button onClick={handleSubmit} className="w-full">
+          Yuborish
+        </Button>
       </div>
     </div>
   );

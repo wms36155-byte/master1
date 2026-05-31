@@ -1,4 +1,7 @@
-import { Operator, CreateOperatorDTO } from "@/types/operator.types";
+import {
+  Operator,
+  CreateOperatorDTO,
+} from "@/types/operator.types";
 
 const API_URL = "http://localhost:5000/operators";
 
@@ -6,7 +9,8 @@ const API_URL = "http://localhost:5000/operators";
 export const getOperators = async (): Promise<Operator[]> => {
   const res = await fetch(API_URL);
 
-  if (!res.ok) throw new Error("Failed to fetch operators");
+  if (!res.ok)
+    throw new Error("Failed to fetch operators");
 
   return res.json();
 };
@@ -26,16 +30,43 @@ export const createOperator = async (
     }),
   });
 
-  if (!res.ok) throw new Error("Failed to create operator");
+  if (!res.ok)
+    throw new Error("Failed to create operator");
+
+  return res.json();
+};
+
+// UPDATE
+export const updateOperator = async (
+  id: number,
+  data: CreateOperatorDTO
+): Promise<Operator> => {
+  const res = await fetch(`${API_URL}/${id}`, {
+    method: "PUT", // json-server uchun PUT
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      id,
+      ...data,
+      available: true,
+    }),
+  });
+
+  if (!res.ok)
+    throw new Error("Failed to update operator");
 
   return res.json();
 };
 
 // DELETE
-export const deleteOperator = async (id: number): Promise<void> => {
+export const deleteOperator = async (
+  id: number
+): Promise<void> => {
   const res = await fetch(`${API_URL}/${id}`, {
     method: "DELETE",
   });
 
-  if (!res.ok) throw new Error("Failed to delete operator");
+  if (!res.ok)
+    throw new Error("Failed to delete operator");
 };
