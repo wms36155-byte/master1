@@ -51,7 +51,7 @@ export default function Navbar() {
             href="/favorites"
             className="text-sm text-white/70 hover:text-green-400 transition"
           >
-            Favorites
+           Yoqtirilganlar
           </Link>
 
           {/* CART */}

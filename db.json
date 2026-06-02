@@ -14,30 +14,56 @@
       "description": "Professional excavator for construction projects."
     },
     {
-      "id": "52ba",
-      "name": "Client",
-      "category": "Ekskavator",
-      "pricePerHour": 788,
-      "pricePerDay": 5678,
-      "pricePerMonth": 89,
-      "location": "tuxumcha",
-      "rating": 44,
-      "description": "hii",
-      "operatorAvailable": true,
-      "image": "https://thfvnext.bing.com/th/id/OIP.7_JEcmBcNMHsPMFm_1FUKwHaEz?w=275&h=180&c=7&r=0&o=7&cb=thfvnextfalcon&dpr=1.4&pid=1.7&rm=3"
-    },
-    {
       "name": "P 340M",
       "category": "Pogruzchik",
-      "pricePerHour": 788,
-      "pricePerDay": 5678,
-      "pricePerMonth": 89,
+      "pricePerHour": 20000,
+      "pricePerDay": 350000,
+      "pricePerMonth": 15000000,
       "location": "samarqand",
-      "rating": 49,
-      "description": "",
+      "rating": 3.8,
+      "description": " Kuchli gidravlik tizimga ega zamonaviy ekskavator. Yer qazish, poydevor va qurilish ishlari uchun mos.",
       "operatorAvailable": true,
       "image": "https://tse4.mm.bing.net/th/id/OIP.nVk-se7HJ9iWPpgKrErl-AHaE8?rs=1&pid=ImgDetMain&o=7&rm=3",
       "id": "zJCCF3Jqz7s"
+    },
+    {
+      "id": "47a5",
+      "name": "Komatsu PC200",
+      "category": "Ekskavator",
+      "pricePerHour": 230000,
+      "pricePerDay": 1700000,
+      "pricePerMonth": 42000000,
+      "location": "Samarqand",
+      "rating": 4.8,
+      "description": "O‘rta va yirik qurilish obyektlari uchun mo‘ljallangan ishonchli ekskavator.",
+      "operatorAvailable": false,
+      "image": "https://th.bing.com/th/id/OIP.9IpDzFe833v2zLN6iVnbbAHaFF?w=241&h=180&c=7&r=0&o=7&dpr=1.4&pid=1.7&rm=3"
+    },
+    {
+      "id": "dff3",
+      "name": "CAT D6 Bulldozer",
+      "category": "Buldozer",
+      "pricePerHour": 300000,
+      "pricePerDay": 2200000,
+      "pricePerMonth": 55000000,
+      "location": "Toshkent viloyati",
+      "rating": 4.7,
+      "description": "Yer tekislash va og‘ir qurilish ishlari uchun mo‘ljallangan kuchli buldozer.",
+      "operatorAvailable": true,
+      "image": "https://th.bing.com/th/id/OIP.gEuVe8cvYv1iV5IfFYXbLwHaEU?w=303&h=180&c=7&r=0&o=7&dpr=1.4&pid=1.7&rm=3"
+    },
+    {
+      "id": "3817",
+      "name": "XCMG QY25K",
+      "category": "Avtokran",
+      "pricePerHour": 450000,
+      "pricePerDay": 3500000,
+      "pricePerMonth": 85000000,
+      "location": "Andijon",
+      "rating": 4.9,
+      "description": "25 tonnagacha yuk ko‘tarish imkoniyatiga ega zamonaviy avtokran.",
+      "operatorAvailable": true,
+      "image": "https://th.bing.com/th/id/OIP._schk3EScNxlgpj7DQKskAAAAA?w=194&h=163&c=7&r=0&o=7&dpr=1.4&pid=1.7&rm=3"
     }
   ],
   "bookings": [
@@ -60,16 +86,6 @@
       "totalPrice": 8000000,
       "withOperator": false,
       "createdAt": "2026-05-21T14:20:00.000Z"
-    },
-    {
-      "equipmentName": "CAT 320D",
-      "customerName": "Amira",
-      "phone": "994020039",
-      "days": 1,
-      "totalPrice": 5500000,
-      "withOperator": true,
-      "createdAt": "2026-05-23T05:48:00.362Z",
-      "id": "Kp1ZuYIwUAg"
     },
     {
       "equipmentName": "Cart (1 items)",
@@ -101,12 +117,20 @@
       "available": true
     },
     {
-      "name": "Abror",
+      "id": "Nl93ch4b0A4",
+      "name": "Abror Muhtoraliyev",
       "phone": "+998944736300",
       "experience": 9,
       "location": "Chilonzor",
-      "available": true,
-      "id": "Nl93ch4b0A4"
+      "available": true
+    },
+    {
+      "id": "0a89",
+      "name": "Ixtiyor Baxriddinov",
+      "phone": "+998 93 456 98 78",
+      "experience": 6,
+      "location": "Andijon",
+      "available": true
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

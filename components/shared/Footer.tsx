@@ -97,7 +97,7 @@ export default function Footer() {
 
         {/* BOTTOM */}
         <div className="border-t border-white/10 mt-10 pt-6 text-center text-white/40 text-sm">
-          © {new Date().getFullYear()} MasterLaser. All rights reserved.
+          © {new Date().getFullYear()} MasterLaser. Barcha huquqlar himoyalangan.
         </div>
 
       </Container>
