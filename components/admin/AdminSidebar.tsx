@@ -32,12 +32,12 @@ const links = [
     icon: ShoppingCart,
   },
   {
-    title: "Users",
+    title: "Foydalanuvchilar",
     href: "/admin/users",
     icon: Users,
   },
   {
-    title: "Operators",
+    title: "Operatorlar",
     href: "/admin/operators",
     icon: Users,
   },
